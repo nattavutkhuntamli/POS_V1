@@ -11,6 +11,7 @@ export default function Product() {
   const [products, setProducts] = useState([]);
   const [productImage, setProductImage] = useState({});
   const [productsImages, setProductImages] = useState([]);
+  const [key, setKey] = useState(Date.now());
 
   useEffect(() => {
     fetchProducts();
@@ -353,7 +354,7 @@ export default function Product() {
               </div>
               <div className="mt-3 form-group col-sm-12">
                 <label >เลือกภาพสินค้า <span className='text-danger'> *</span></label>
-                <input type='file' name="image" id="image" className="form-control" multiple onChange={e => handleImageChange(e.target.files)} />
+                <input type='file' name="image" id="image" key={key} className="form-control"  multiple onChange={e => handleImageChange(e.target.files)} />
               </div>
               <hr />
               {productsImages && productsImages.length > 0 &&

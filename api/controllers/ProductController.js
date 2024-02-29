@@ -21,7 +21,6 @@ const Product = {
     //12-03
     createProduct: async(item) => {
         try {
-            console.log(item)
             const isValidateName = await ProductModels.findAll({
                 where:{
                     barcode: item.barcode, 

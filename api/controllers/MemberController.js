@@ -43,7 +43,7 @@ const Member = {
                 attributes:['id','phone','name']
             })
             if(isValidateMember.length > 0) {
-                let token = jwt.sign({ id: isValidateMember[0].id }, process.env.SECRET, { expiresIn: '30m' });
+                let token = jwt.sign({ id: isValidateMember[0].id }, process.env.SECRET, { expiresIn: '1h' });
                 return {
                     statusCode: 200,
                     message:'success',

@@ -67,7 +67,7 @@ function Login() {
                                 <form  onSubmit={handleLogin} className="login-form">
                                     <div className="form-group">
                                         <label className=" control-label">Username <span style={ { color:'red'}}> *</span></label>
-                                        <input type="text" className="form-control rounded-left" placeholder="Username" onChange={e => setUsername(e.target.value)} required />
+                                        <input type="text" className="form-control rounded-left" placeholder="Username" onChange={e => setUsername(e.target.value)} required maxLength={10} />
                                     </div>
                                     <div className="form-group ">
                                         <label className=" control-label">Password <span style={ { color:'red'}}> *</span></label>

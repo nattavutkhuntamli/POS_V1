@@ -120,11 +120,11 @@ function Package() {
                     </div>
                     <div className="mb-3">
                         <label htmlFor="phone" className="form-label">เบอร์โทรศัพท์<span style={{color:'red'}}>*</span></label>
-                        <input type="text" className="form-control" id="phone" placeholder="เบอร์โทรศัพท์" onChange={e => setInput({ ...Input, phone: e.target.value })} required/>
+                        <input type="text" className="form-control" id="phone" placeholder="เบอร์โทรศัพท์" onChange={e => setInput({ ...Input, phone: e.target.value })} required maxLength={10} />
                     </div>
                     <div className="mb-3">
                         <label htmlFor="phone" className="form-label">รหัสผ่าน <span style={{color:'red'}}>*</span></label>
-                        <input type="password" className="form-control" id="pass" placeholder="รหัสผ่าน" onChange={e => setInput({ ...Input, pass: e.target.value })} required/>
+                        <input type="password" className="form-control" id="pass" placeholder="รหัสผ่าน" onChange={e => setInput({ ...Input, pass: e.target.value })} minLength={6} maxLength={10} required/>
                     </div>
 
                     <div className="mb-3">
