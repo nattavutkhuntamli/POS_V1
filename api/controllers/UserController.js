@@ -49,4 +49,96 @@ module.exports = {
 
         }
     },
+    editUser: async (id,item) => {
+        try {
+            const isValidateId = await UserModels.findByPk(id)
+            if(isValidateId){
+                const updateUser = await UserModels.update(item,
+                    {
+                        where:{
+                            id:id
+                        }
+                    }
+                )
+                if(updateUser) {
+                    return {
+                        statusCode: 200,
+                        message:'แก้ไขข้อมูลสมาชิกสำเร็จ',
+                        body: updateUser
+                    }
+                }else{
+                    throw { statusCode: 404, message: "แก้ไขข้อมูลไม่สำเร็จ" }
+                }
+            }else{
+                throw { statusCode: 404, message: "ไม่พบข้อมูลสมาชิก" }
+            }
+        } catch (error) {
+            throw { statusCode: error.statusCode || 400, message: error.message}
+        }
+    },
+    editMemberPass:async(item) => {
+        try {
+            const isValidateId = await UserModels.findAll({
+                where: {
+                    id: item.id,
+                }
+            })
+            if(isValidateId){
+                let pass_old = item.body.oldpwd
+                if(isValidateId[0].pwd == pass_old){
+                    let newPwd = item.body.newpwd
+                    const updatePass = await UserModels.update(
+                        {
+                            pwd:newPwd
+                        },
+                        {
+                            where:{
+                                id: isValidateId[0].id
+                            }
+                        }
+                    )
+                    if(updatePass){
+                        return {
+                            statusCode: 200,
+                            message:'แก้ไขรหัสผ่านสำเร็จ',
+                            body: updatePass
+                        }
+                    }else{
+                        throw { statusCode: 404, message: "แก้ไขรหัสผ่านไม่สำเร็จ" }
+                    }
+                }else{
+                    throw { statusCode: 400, message: "กรุณาระบุรหัสผ่านเก่าให้ถูกต้อง" }
+                }
+            }else{
+                throw { statusCode: 404, message: "ไม่พบข้อมูลสมาชิก" }
+            }
+        } catch (error) {
+            throw { statusCode: error.statusCode || 400, message: error.message}
+        }
+    },
+    deleteByID: async(id) => {
+        try {
+            const isValidateId = await UserModels.findByPk(id)
+            if(isValidateId){
+                const deleteUser = await UserModels.destroy({
+                    where:{
+                        id:id
+                    }
+                })
+                if(deleteUser) {
+                    return {
+                        statusCode: 200,
+                        message:'ลบข้อมูลสมาชิกสำเร็จ',
+                        body: deleteUser
+                    }
+                }else{
+                    throw { statusCode: 404, message: "ลบข้อมูลไม่สำเร็จ" }
+                }
+            }else{
+                throw { statusCode: 404, message: "ไม่พบข้อมูลสมาชิก" }
+            }
+        } catch (error) {
+            throw { statusCode: error.statusCode || 400, message: error.message}
+        }
+    }
 }

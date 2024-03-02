@@ -25,12 +25,38 @@ router.post('/insert', Service.isLogin, async (req, res) => {
 })
 
 router.put('/edit/:id', Service.isLogin, async (req, res) => {
+  try {
+    const editUser = await UserController.editUser(req.params.id,req.body)
+    return res.status(200).json(editUser)
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+        message: error.message ||'server error'
+    })
+  }
+})
 
+router.put('/editPass/:id', Service.isLogin, async (req, res) => {
+    try {
+        const item = { id: req.params.id, body: req.body}
+        const editMember = await UserController.editMemberPass(item)
+        return res.status(200).json(editMember)
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message ||'server error'
+        })
+    }
 })
 
 
 router.delete('/delete/:id', Service.isLogin, async (req, res) => {
-
+  try {
+    const isValidateId_andDelete = await UserController.deleteByID(req.params.id)
+    return res.status(200).json(isValidateId_andDelete)
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+        message: error.message ||'server error'
+    })
+  }
 })
 
 module.exports = router;

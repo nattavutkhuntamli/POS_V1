@@ -9,6 +9,7 @@ import axios from 'axios';
 export default function Product() {
   const [product, setProduct] = useState({});
   const [products, setProducts] = useState([]);
+  
   const [productImage, setProductImage] = useState({});
   const [productsImages, setProductImages] = useState([]);
   const [key, setKey] = useState(Date.now());
@@ -21,7 +22,12 @@ export default function Product() {
     try {
       const res = await axios.get(`${config.api_path}product/list`, config.headers());
       if (res.status === 200) {
-        setProducts(res.data.body);
+        if(res.data != ''){
+            setProducts(res.data.body)
+        }else{
+          setProducts([]);
+        }
+        // setProducts(res.data.body);
       }
     } catch (error) {
       Swal.fire({
@@ -295,7 +301,7 @@ export default function Product() {
                         <button className='btn btn-sm btn-danger ml-3' onClick={() => deleteProduct(item.id)} tabIndex={item.id}> <i className='fa fa-trash'></i> </button>
                       </td>
                     </tr>
-                  )) : <tr><td>ไม่มีข้อมูล</td></tr>}
+                  )) : <tr className='text-center'><td colSpan={6}>ไม่มีข้อมูล</td></tr>}
                 </tbody>
               </table>
             </div>
