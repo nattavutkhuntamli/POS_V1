@@ -238,7 +238,7 @@ export default function Product() {
               text: `${res.data.message}`,
             }).then((d) => {
               setTimeout(() => {
-                window.location.reload();
+                 window.location.href="/product"
               }, 500)
             });
           }

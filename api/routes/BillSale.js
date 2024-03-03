@@ -1,7 +1,8 @@
 const Router = require('express').Router();
 const Service = require('../controllers/Service');
 const BillSaleController = require('../controllers/BillSaleController'); 
-
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv').config()
 Router.get('/openBill', Service.isLogin, async(req,res) => {
     try {
         const resultBillSale = await BillSaleController.BillAll();

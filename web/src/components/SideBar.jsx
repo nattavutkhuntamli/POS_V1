@@ -204,10 +204,10 @@ function SideBar() {
                             </li>
 
                             <li className="nav-item">
-                                <Link to='/about' className={location.pathname === '/about' ? 'nav-link active' : 'nav-link'}>
-                                  <i className="nav-icon fa-regular fa-address-card"></i>
+                                <Link to='/sale' className={location.pathname === '/sale' ? 'nav-link active' : 'nav-link'}>
+                                  <i className="nav-icon fa-regular fa-dollar-sign"></i>
                                     <p>
-                                        เกี่ยวกับเรา
+                                        สินค้า
                                     </p>
                                 </Link>
                             </li>

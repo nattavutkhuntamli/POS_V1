@@ -1,5 +1,6 @@
 const BillSaleModels = require('../models/BillSaleModels')
 const BillSaleDetailModels = require('../models/BillSaleDetailModels')
+
 module.exports = {
     BillAll: async() => {
         try {
