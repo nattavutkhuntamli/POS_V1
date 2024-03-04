@@ -7,14 +7,15 @@ const path = require('path')
 const router = express.Router();
 const uuid = require('uuid');
 
+const Service = require('../controllers/Service');
 
 router.use(fileUpload())
 
 
 
-router.get('/list', async (req, res) => {
+router.get('/list', Service.isLogin,async (req, res) => {
     try {
-        const product = await ProductController.all();
+        const product = await ProductController.all(req.member);
         return res.status(200).json(product);
     } catch (error) {
         return res.status(error.statusCode || 500).json({
@@ -23,7 +24,7 @@ router.get('/list', async (req, res) => {
     }
 });
 
-router.get('/listImage/:id', async (req, res) => {
+router.get('/listImage/:id',Service.isLogin, async (req, res) => {
     try {
         const product = await ProductImageController.listImage(req.params.id);
         return res.status(200).json(product);
@@ -34,12 +35,24 @@ router.get('/listImage/:id', async (req, res) => {
     }
 })
 
+router.get('/listForSale',Service.isLogin, async (req, res) => {
+  try {
+     const result = await ProductController.listForProduct_and_Image(req.member)
+     return res.status(200).json(result);
+    
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+        message: error.message ||'server error'
+    })
+  }
+})
 
 
 
-router.post('/create', async (req, res) => {
+
+router.post('/create' , Service.isLogin, async (req, res) => {
     try {
-        const CreateProduct = await ProductController.createProduct(req.body);
+        const CreateProduct = await ProductController.createProduct(req.body,req.member);
         return res.status(200).json(CreateProduct);
     } catch (error) {
         return res.status(error.statusCode || 500).json({
@@ -49,7 +62,7 @@ router.post('/create', async (req, res) => {
 })
 let rs_file = [];
 let type;
-router.post('/insertImage', async (req, res) => {
+router.post('/insertImage', Service.isLogin,async (req, res) => {
     try {
         //ตรวจหาโฟลเดอร์ uplads
         if (!fs.existsSync(path.join('./uploads'))) {
@@ -112,7 +125,7 @@ router.post('/insertImage', async (req, res) => {
 })
 
 
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id', Service.isLogin,async (req, res) => {
     try {
         const UpdateProduct = await ProductController.updateProduct(req.params.id, req.body);
         return res.status(200).json(UpdateProduct);
@@ -122,7 +135,7 @@ router.put('/update/:id', async (req, res) => {
         })
     }
 })
-router.put('/chooseMainImage/:id', async (req, res) => {
+router.put('/chooseMainImage/:id',Service.isLogin, async (req, res) => {
     try {
         const product = await ProductImageController.chooseMainImage({id: req.params.id, productId: req.body.productId });
         return res.status(200).json(product);
@@ -132,7 +145,7 @@ router.put('/chooseMainImage/:id', async (req, res) => {
         })
     }
 })
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', Service.isLogin,async (req, res) => {
     try {
         const DeleteProduct = await ProductController.deleteProduct(req.params.id);
         return res.status(200).json(DeleteProduct);
@@ -143,7 +156,7 @@ router.delete('/delete/:id', async (req, res) => {
     }
 })
 
-router.delete('/deleteImage/:id',async (req, res) => {
+router.delete('/deleteImage/:id',Service.isLogin,async (req, res) => {
     try {
        const CheckId = await ProductImageController.isValidateImgId(req.params.id)
        if(CheckId.statusCode === 200){

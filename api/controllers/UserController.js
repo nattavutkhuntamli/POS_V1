@@ -1,12 +1,15 @@
 const UserModels = require('../models/UserModels')
 
 module.exports = {
-    all: async() => {
+    all: async(userId) => {
        try {
           const query = await UserModels.findAll(
               {
                   order:[['id','desc']],
-                  attributes:['id','name','user','level']
+                  attributes:['id','name','user','level'],
+                  where:{
+                      userId:userId
+                  }
               }
           );
           if(query.length > 0) {
@@ -22,7 +25,7 @@ module.exports = {
         throw { statusCode: error.statusCode || 400, message: error.message };
        }
     },
-    register: async (item) => {
+    register: async (userId,item) => {
         try {
             console.log(item)
             const isValidateUsername = await UserModels.findAll({
@@ -37,7 +40,8 @@ module.exports = {
                 name: item.name,
                 user: item.username,
                 pwd: item.pwd,
-                level: item.level
+                level: item.level,
+                userId: userId
             });
              return {
                  statusCode: 201,

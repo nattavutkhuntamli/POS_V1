@@ -4,21 +4,21 @@ const client = require('../config/connect');
 
 const BillSaleModels = client.define('billSale',{
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true
     },
     payData:{
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
     },
   
     userId:{
         type:DataTypes.BIGINT,
     },
     status:{
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        type: DataTypes.STRING,
+        defaultValue: "open",
         allowNull:false
     },
 })

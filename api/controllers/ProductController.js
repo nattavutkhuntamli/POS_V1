@@ -1,10 +1,14 @@
 const ProductModels = require('../models/ProductModels');
+const ProductImageModels = require('../models/ProductImageModels')
 const Product = {
-    all: async() => {
+    all: async(id) => {
         try {
             const query = await ProductModels.findAll(
                 {
-                    order:[['id','desc']]
+                    order:[['id','desc']],
+                    where:{
+                        userId: id
+                    }
                 }
             );
             if(query.length > 0) {
@@ -18,8 +22,38 @@ const Product = {
             throw { statusCode: error.statusCode || 400, message: error.message };
         }
     },
+    listForProduct_and_Image : async(id) => {
+        try{
+            ProductModels.hasMany(ProductImageModels)
+            const query = await ProductModels.findAll({
+                order:[['id','desc']],
+                include:{
+                    model:ProductImageModels,
+                    attributes:['imageName'],
+                    where:{
+                        isMain:true
+                    }
+                },
+                where:{
+                    userId:id
+                }
+            })
+            if(query.length !=0){
+                return {
+                    statusCode:200,
+                    result:query
+                }
+                
+               
+            }else{
+                throw { statusCode: 404, message: "Product not found" };
+            }
+        }catch(error){
+            throw { statusCode: error.statusCode || 400, message: error.message };
+        }
+    },
     //12-03
-    createProduct: async(item) => {
+    createProduct: async(item,id) => {
         try {
             const isValidateName = await ProductModels.findAll({
                 where:{
@@ -30,7 +64,15 @@ const Product = {
             if(isValidateName.length > 0) {
                 throw { statusCode: 400, message: "Product already exists or  barcode " };
             }else{
-                const newProduct = await ProductModels.create(item);
+                const newProduct = await ProductModels.create({
+                    barcode:item.barcode,
+                    name:item.name,
+                    cost:item.cost,
+                    price:item.price,
+                    detail:item.detail,
+                    isMain:true,
+                    userId:id
+                });
                 return {
                     statusCode: 200,
                     message:'เพิ่มรายการสินค้าสำเร็จ',

@@ -19,6 +19,9 @@ const UserModels = conn.define('user', {
     },
     level:{
          type: DataTypes.STRING,
+    },
+    userId:{
+      type: DataTypes.BIGINT,
     }
 },{
     timestamps: false,

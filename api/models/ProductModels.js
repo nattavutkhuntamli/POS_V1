@@ -22,6 +22,9 @@ const ProductModels = client.define('product',{
     detail: {
         type: DataTypes.STRING,
     },
+    userId:{
+        type: DataTypes.BIGINT,
+    }
 },{
     timestamps: false,
 })

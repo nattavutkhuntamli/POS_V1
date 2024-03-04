@@ -56,18 +56,21 @@ export default function Product() {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      let url = product.id !== undefined ? `${config.api_path}product/update/${product.id}` : `${config.api_path}product/create`;
-      const send = await axios({
-        method: product.id !== undefined ? 'put' : 'post',
-        url: url,
-        data: product,
-        headers: config.headers(),
-      });
-      const res = send.data;
-      if (res.statusCode === 200) {
+      let send;
+      let url ;
+      if(product.id !== undefined){
+        url = `${config.api_path}product/update/${product.id}`
+        send = await axios.put(url,product,config.headers());
+      }else{
+        url = `${config.api_path}product/create`
+        send = await axios.post(url,product,config.headers());
+      }
+      const res = send;
+      if (res.status === 200) {
+        console.log(res)
         Swal.fire({
           icon: 'success',
-          text: `${res.message}`,
+          text: `${res.data.message}`,
         }).then(() => {
           handleClose();
           ClearForm();

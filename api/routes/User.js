@@ -3,7 +3,7 @@ const UserController = require('../controllers/UserController')
 const Service = require('../controllers/Service')
 router.get('/list', Service.isLogin, async (req, res) => {
     try {
-        const ShowUser = await UserController.all()
+        const ShowUser = await UserController.all(req.member)
         return res.status(200).json(ShowUser)
     } catch (err) {
         return res.status(err.statusCode || 500).json({
@@ -15,7 +15,7 @@ router.get('/list', Service.isLogin, async (req, res) => {
 router.post('/insert', Service.isLogin, async (req, res) => {
     try {
         // console.log(req.body)
-        const insertUser = await UserController.register(req.body)
+        const insertUser = await UserController.register(req.member,req.body)
         return res.status(200).json(insertUser)
     } catch (err) {
         return res.status(err.statusCode || 500).json({
