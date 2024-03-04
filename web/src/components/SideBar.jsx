@@ -207,7 +207,7 @@ function SideBar() {
                                 <Link to='/sale' className={location.pathname === '/sale' ? 'nav-link active' : 'nav-link'}>
                                   <i className="nav-icon fa-regular fa-dollar-sign"></i>
                                     <p>
-                                        สินค้า
+                                        ขายสินค้า
                                     </p>
                                 </Link>
                             </li>

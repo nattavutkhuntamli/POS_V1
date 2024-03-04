@@ -55,7 +55,7 @@ router.post('/insertImage', async (req, res) => {
         if (!fs.existsSync(path.join('./uploads'))) {
             fs.mkdirSync(path.join('./uploads'))
         }
-        if (!req.files) {
+        if (!req.files || !req.files.image) {
             return res.status(400).json({
                 statusCode: 400,
                 message: 'กรุณาอัพโหลดรูปภาพ',
@@ -80,9 +80,10 @@ router.post('/insertImage', async (req, res) => {
                 await fileName.mv(`./uploads/${randomName}`);
                 type = 'singlefile'
             }
-            
+          
             const uploadData = await ProductImageController.uploadFile({ productId: req.body.productId, Images: rs_file, type })
             if (uploadData.statusCode === 200) {
+                rs_file = [];
                 return res.status(200).json({
                     statusCode: 200,
                     message: 'อัพโหลดรูปภาพสำเร็จ',
