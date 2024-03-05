@@ -24,6 +24,9 @@ function SideBar() {
                 setPackageName(response.data.body.package.name);
             }
         } catch (error) {
+            localStorage.removeItem('isLoginMember')
+            localStorage.removeItem('pos_token')
+            window.location.href = "/login"
             if (error.status === undefined) {
                 console.error('Error fetching data:', error)
             }
@@ -31,6 +34,8 @@ function SideBar() {
                 localStorage.removeItem('isLoginMember')
                 localStorage.removeItem('pos_token')
                 window.location.href = "/login"
+            }else{
+                console.log('eeeeeee')
             }
         }
     }

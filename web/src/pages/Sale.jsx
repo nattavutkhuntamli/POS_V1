@@ -34,6 +34,32 @@ export default function Sale() {
             console.log(error)
         }
     }
+    const handleSave  = async() => {
+        try {
+            console.log('e')
+            // let send;
+            // let url ;
+            // if(billSale.id!== undefined){
+            //     url = `${config.api_path}billsale/update/${billSale.id}`
+            //     send = await axios.put(url,billSale,config.headers());
+            // }else{
+            //     url = `${config.api_path}billsale/create`
+            //     send = await axios.post(url,billSale,config.headers());
+            // }
+            // const res = send;
+            // if(res.status === 200){
+            //     Swal.fire({
+            //         icon:'success',
+            //         title: res.data.message,
+            //         showConfirmButton: false,
+            //         timer: 1500
+            //     })
+            //     openBill()
+            // }
+        } catch (error) {
+            console.error(error)
+        }
+    }
     return (
         <div>
             <Template>
@@ -71,7 +97,7 @@ export default function Sale() {
                         </div> */}
                                 <div className="row">
                                     {products.length > 0 ? products.map(item => (
-                                        <div className="col-lg-3 col-md-6 " key={item.id}>
+                                        <div className="col-lg-3 col-md-6 " key={item.id} onClick={handleSave}>
                                             <div className="card d-flex flex-column align-items-center text-nowrap">
                                                 <div className="text-center "> 
                                                 <img   className="card-img" src={`${config.host + item.productImages[0].imageName}`} alt={item.name}  width={'200px'} height={'200px'} /> </div>

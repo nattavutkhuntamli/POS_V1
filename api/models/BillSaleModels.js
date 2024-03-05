@@ -21,6 +21,8 @@ const BillSaleModels = client.define('billSale',{
         defaultValue: "open",
         allowNull:false
     },
+},{
+    timestamps: false,
 })
 
 BillSaleModels.sync({alter: true})

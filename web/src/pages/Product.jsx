@@ -197,6 +197,7 @@ export default function Product() {
       }
       const url = `${config.api_path}product/chooseMainImage/${data.id}`
       const res = await axios.put(url, data, config.headers());
+      
       if(res.status === 200){
         fetchDataProductImage({
            id:item.id
@@ -233,7 +234,8 @@ export default function Product() {
             id: item.id,
             imageName: item.imageName
           };
-          const res = await axios.delete(`${config.api_path}product/deleteImage/${item.id}`, data, config.headers());
+          const url = `${config.api_path}product/deleteImage/${data.id}`
+          const res = await axios.post(url, data, config.headers());
           if (res.status === 200) {
             Swal.fire({
               icon: 'success',
@@ -245,6 +247,8 @@ export default function Product() {
               }, 500)
             });
           }
+
+
         } else {
           Swal.fire({
             icon: 'error',

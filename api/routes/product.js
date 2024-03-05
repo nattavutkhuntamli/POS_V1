@@ -145,18 +145,7 @@ router.put('/chooseMainImage/:id',Service.isLogin, async (req, res) => {
         })
     }
 })
-router.delete('/delete/:id', Service.isLogin,async (req, res) => {
-    try {
-        const DeleteProduct = await ProductController.deleteProduct(req.params.id);
-        return res.status(200).json(DeleteProduct);
-    } catch (error) {
-        return res.status(error.statusCode || 500).json({
-            message: error.message || 'server error'
-        })
-    }
-})
-
-router.delete('/deleteImage/:id',Service.isLogin,async (req, res) => {
+router.post('/deleteImage/:id', Service.isLogin, async (req, res) => {
     try {
        const CheckId = await ProductImageController.isValidateImgId(req.params.id)
        if(CheckId.statusCode === 200){
@@ -173,5 +162,18 @@ router.delete('/deleteImage/:id',Service.isLogin,async (req, res) => {
         })
     }
 })
+
+router.delete('/delete/:id', Service.isLogin,async (req, res) => {
+    try {
+        const DeleteProduct = await ProductController.deleteProduct(req.params.id);
+        return res.status(200).json(DeleteProduct);
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message || 'server error'
+        })
+    }
+})
+
+
 
 module.exports = router
