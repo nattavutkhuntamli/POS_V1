@@ -48,4 +48,15 @@ Router.post('/sale', Service.isLogin, async(req,res) => {
         })
     }
 })
+
+Router.delete('/deleteItemCart/:id', Service.isLogin, async(req,res) => {
+    try {
+        const DeleteCartItem = await  BillSaleController.DeleteCartItem(req.params.id)
+        return res.status(200).json(DeleteCartItem)
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message ||'server error'
+        })
+    }
+})
 module.exports = Router;

@@ -95,7 +95,7 @@ module.exports = {
                 },
                 include: {
                     model:BillSaleDetailModels,
-                    attributes:['productId','price','qty'],
+                    attributes:['id','billSaleId','productId','price','qty'],
                     order:[['id','desc']],
                     include: {
                         model:ProductModels,
@@ -116,6 +116,26 @@ module.exports = {
         } catch (error) {
             throw { statusCode:400, message:error.message}
             
+        }
+    },
+
+    DeleteCartItem: async(id) => {
+        try {
+            const DeleteCartItemRequest = await BillSaleDetailModels.destroy({
+                where:{
+                    id:id
+                }
+            });
+            if(DeleteCartItemRequest){
+                return {
+                    statusCode: 200,
+                    message: "ลบรายการสินค้าสำเร็จ",
+                }
+            }else{
+                throw { statusCode:400, message: 'ลบรายการสินค้าไม่สำเร็จ'}
+            }
+        } catch (error) {
+            throw { statusCode:400, message:error.message}
         }
     }
 }

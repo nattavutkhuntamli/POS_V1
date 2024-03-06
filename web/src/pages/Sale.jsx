@@ -88,7 +88,17 @@ export default function Sale() {
                 showDenyButton: true,
             }).then(async(res) => {
                 if (res.isConfirmed) {
-
+                    const url = `${config.api_path}billsale/deleteItemCart/${item.id}`;
+                    const send = await axios.delete(url,config.headers())
+                    if (send.status === 200) {
+                        Swal.fire({
+                            icon:'success',
+                            title: send.data.message,
+                            text: send.data.message,
+                        }).then(() => {
+                            fetchBillSaleDetail()
+                        })
+                    }
                 }else{
                     Swal.fire({
                         icon: 'error',
@@ -99,6 +109,11 @@ export default function Sale() {
             })
         } catch (error) {
             console.log(error)
+            Swal.fire({
+                icon: 'error',
+                title: 'ไม่สำเร็จ',
+                text: error.message,
+            })
             
         }
     }

@@ -319,7 +319,7 @@ export default function Product() {
             <div className="row">
               <div className="mt-3 form-group col-sm-12">ฺ
                 <label >Barcode <span className='text-danger'> *</span></label>
-                <input type="text" className="form-control" id="barcode" placeholder="Barcode" value={product.barcode || ''} required onChange={e => setProduct({ ...product, barcode: e.target.value })} />
+                <input type="text" className="form-control" id="barcode" maxLength={10} placeholder="Barcode" value={product.barcode || ''} required onChange={e => setProduct({ ...product, barcode: e.target.value })} />
               </div>
               <div className="mt-3 form-group col-sm-12">ฺ
                 <label >ชื่อสินค้า <span className='text-danger'> *</span></label>
