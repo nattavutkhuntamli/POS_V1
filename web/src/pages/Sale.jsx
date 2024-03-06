@@ -106,7 +106,7 @@ export default function Sale() {
         <div>
             <Template>
                 <Header title="รายการสินค้า" breadMain="หน้าแรก" breadActive="สินค้า" />
-                <div className="card" style={{ maxHeight: "80vh", overflowY: "auto" }}>
+                <div className="card" >
                     <div className="card-header bg-white">
                         <h3 className="card-title"> ขายสินค้า </h3>
                         <div className="card-tools">
@@ -115,7 +115,7 @@ export default function Sale() {
                             <button className='btn btn-secondary me-2'> <i className=' fa fa-file-alt  me-2'></i>บิลล่าสุด</button>
                         </div>
                     </div>
-                    <div className="card-body">
+                    <div className="card-body" style={{ maxHeight: "80vh", overflowY: "auto" }}>
                         <div className="row">
                             <div className="col-sm-9">
                                 <div className="row">
