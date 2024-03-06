@@ -17,6 +17,35 @@ Router.get('/openBill', Service.isLogin, async(req,res) => {
             message: error.message ||'server error'
         })
     }
-} )
+})
 
+Router.get('/currentBillInfo', Service.isLogin, async(req,res) => {
+    try {
+        const payload = {
+            userId:req.member,
+            status:'open'
+        }
+        const result = await BillSaleController.SaleInfo(payload)
+        return res.status(200).json(result)
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message ||'server error'
+        })
+    }
+})
+
+Router.post('/sale', Service.isLogin, async(req,res) => { 
+    try {
+        const payload = {
+            userId:req.member,
+            status:'open'
+        }
+        const currentBill = await BillSaleController.SaleBill(payload,req.body)
+        return res.status(200).json(currentBill)
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message ||'server error'
+        })
+    }
+})
 module.exports = Router;
