@@ -11,6 +11,7 @@ export default function Sale() {
     const [currentBill, setcurrentBill] = useState([])
     const [totalPrice, setTotalPrice] = useState(0)
     const [item, setItem] = useState({})
+    const [InputMoney , setInputMoney] = useState(0)
     useEffect(() => {
         fetchData()
         openBill()
@@ -51,7 +52,7 @@ export default function Sale() {
             for (let i = 0; i < currentBill.length; i++) {
                 total += currentBill[i].price * currentBill[i].qty
             }
-            setTotalPrice(parseInt(total).toLocaleString('th-TH'))
+            setTotalPrice(total)
         }
 
     }
@@ -171,7 +172,7 @@ export default function Sale() {
                     <div className="card-header bg-white">
                         <h3 className="card-title"> ขายสินค้า </h3>
                         <div className="card-tools">
-                            <button className='btn btn-success me-2'> <i className=' fa fa-check  me-2'></i>จบการขาย</button>
+                            <button className='btn btn-success me-2' data-toggle="modal" data-target="#modalEndSale"> <i className=' fa fa-check  me-2'></i>จบการขาย</button>
                             <button className='btn btn-info me-2'> <i className=' fa fa-file  me-2'></i>บิลวันนี้</button>
                             <button className='btn btn-secondary me-2'> <i className=' fa fa-file-alt  me-2'></i>บิลล่าสุด</button>
                         </div>
@@ -201,7 +202,7 @@ export default function Sale() {
                                 <div className="card" style={{ border: "2px dotted", maxHeight: "100%", overflowY: "auto" }}>
                                     <div className="card-body">
                                         <div className="text-end">
-                                            <span className='btn btn-secondary h2 pe-3 ps-3 w-100 p-3 text-right' style={{ borderRadius: "0", color: "#70FE3F", backgroundColor: "black" }}>{totalPrice || 0.00}</span>
+                                            <span className='btn btn-secondary h2 pe-3 ps-3 w-100 p-3 text-right' style={{ borderRadius: "0", color: "#70FE3F", backgroundColor: "black" }}>  {parseInt(totalPrice).toLocaleString('th') || 0.00}</span>
                                         </div>
                                         {currentBill.length > 0 ? (
                                             currentBill.map((item, index) => (
@@ -254,6 +255,28 @@ export default function Sale() {
                             <i className="fa fa-times"></i> แก้ไขจำนวนสินค้า
                     </button>
                 </Modal>
+
+                <Modal id="modalEndSale" title="จบการขาย">
+                    <form>
+                        <div>
+                            <div><label htmlFor="">ยอดเงินทั้งหมด</label></div>
+                            <div><input type="text" className='form-control text-end' value={parseInt(totalPrice).toLocaleString('th-TH')} disabled /></div>
+                            <div className='mt-3'><label htmlFor="">รับเงิน</label></div>
+                            <div><input type="text" className='form-control text-end' onChange={e => setInputMoney(e.target.value)} /></div>
+                            <div className='mt-3'><label htmlFor="">เงินทอน</label></div>
+                            <div><input type="text" className='form-control text-end' value={(InputMoney - totalPrice) || 0} readOnly /></div>
+                            <div className="text-center">
+                                <button className='btn btn-success mt-3 me-2'> 
+                                    <i className="fa fa-check me-2"></i> จ่ายพอดี
+                                </button>
+                                <button className='btn btn-primary mt-3'> 
+                                    <i className="fa fa-check me-2"></i> จบการขาย
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </Modal>
+
             </Template>
         </div>
     )
