@@ -119,6 +119,43 @@ module.exports = {
         }
     },
 
+    UpdateQty: async(item) => {
+        try {
+            console.log(item.id)
+            const isBillSaleId = await BillSaleDetailModels.findOne({
+                where:{
+                    id:item.id
+                }
+            })
+            if(isBillSaleId) {
+                const updateQty = await BillSaleDetailModels.update(
+                    {
+                        qty:item.qty
+                    },
+                    {
+                        where:{
+                            id:item.id
+                        }
+                    }
+                )
+                if(updateQty){
+                    return {
+                        statusCode: 200,
+                        message: "แก้ไขจำนวนสินค้าสำเร็จ",
+                    }
+                }else{
+                    throw { statusCode:400, message: 'แก้ไขจำนวนสินค้าไม่สำเร็จ'}
+                }
+            }else{
+                throw { statusCode:400, message: 'ไม่พบรายการนี้'}
+            }
+            
+        } catch (error) {
+            throw { statusCode:400, message:error.message}
+            
+        }
+    },
+
     DeleteCartItem: async(id) => {
         try {
             const DeleteCartItemRequest = await BillSaleDetailModels.destroy({

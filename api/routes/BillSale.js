@@ -49,6 +49,17 @@ Router.post('/sale', Service.isLogin, async(req,res) => {
     }
 })
 
+Router.put('/updateQty/:id',Service.isLogin, async(req,res) => {
+    try {
+        const updateQty = await BillSaleController.UpdateQty(req.body)
+        return res.status(200).json(updateQty)
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message ||'server error'
+        })
+    }
+})
+
 Router.delete('/deleteItemCart/:id', Service.isLogin, async(req,res) => {
     try {
         const DeleteCartItem = await  BillSaleController.DeleteCartItem(req.params.id)

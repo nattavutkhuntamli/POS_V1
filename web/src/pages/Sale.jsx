@@ -4,11 +4,13 @@ import Header from '../components/Header'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import config from '../config'
+import Modal from '../components/Modal'
 export default function Sale() {
     const [products, setProducts] = useState([])
     const [billSale, setBillSale] = useState({})
     const [currentBill, setcurrentBill] = useState([])
     const [totalPrice, setTotalPrice] = useState(0)
+    const [item, setItem] = useState({})
     useEffect(() => {
         fetchData()
         openBill()
@@ -108,7 +110,6 @@ export default function Sale() {
                 }
             })
         } catch (error) {
-            console.log(error)
             Swal.fire({
                 icon: 'error',
                 title: 'ไม่สำเร็จ',
@@ -117,6 +118,51 @@ export default function Sale() {
             
         }
     }
+    const handleUpdateqty = async(e) => {
+        e.preventDefault();
+        try {
+           Swal.fire({
+            icon: 'question',
+            title: 'แก้ไขจำนวน',
+            text: 'ยืนยันการแก้ไขจำนวน',
+            confirmButtonColor: '#3085d6',
+            showDenyButton: true,
+           }).then(async(isConfirmed) => {
+              if(isConfirmed) {
+                    const url = `${config.api_path}billsale/updateQty/${item.id}`
+                    const send = await axios.put(url,item,config.headers())
+                    if (send.status === 200) {
+                        Swal.fire({
+                            icon:'success',
+                            title: send.data.message,
+                            text: send.data.message,
+                        }).then(() => {
+                            fetchBillSaleDetail()
+                            handleClose()
+                        })
+                    }
+              }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ยกเลิก',
+                    text: 'ยกเลิกการแก้ไขจำนวน',
+                })
+              }
+           })
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'ไม่สำเร็จ',
+                text: error.message,
+            })
+        }
+    }
+    const handleClose = async (e) => {
+        const btn = document.getElementsByClassName('btnClose');
+        for (let i = 0; i < btn.length; i++) {
+          btn[i].click();
+        }
+      };
     return (
         <div>
             <Template>
@@ -162,17 +208,21 @@ export default function Sale() {
                                                 <div className="card mt-3" key={index} >
                                                     <div className="card-body text-nowrap">
                                                         <div className='mb-2 '>{item.product.name}</div>
-                                                        <div className='mb-1 '>จำนวนสินค้า: <b className="text-danger">{item.qty}</b>  | ราคาชิ้นละ: {parseInt(item.price).toLocaleString('th')}</div>
+                                                        <div className='mb-1  text-nowrap'>จำนวนสินค้า: <b className="text-danger">{item.qty}</b>  | ราคาชิ้นละ: {parseInt(item.price).toLocaleString('th')}</div>
                                                         <div className='mb-1 '>รวม {(item.qty * parseInt(item.price)).toLocaleString('th')} บาท</div>
                                                         <div className="row">
                                                             <div className="col-sm-12">
                                                                 <div className="float-end">
-                                                                    <button className='btn btn-sm btn-danger me-2' onClick={e => DeleteItemCart(item)}>
-                                                                        <i className="fa fa-trash"></i>
-                                                                    </button>
-                                                                    <button className='btn btn-sm  btn-info' >
+                                                                   
+
+                                                                    <button className='btn btn-sm  btn-info me-2'  data-bs-toggle="modal" data-bs-target="#modalConfigqty" tabIndex={item.id} onClick={e => setItem(item)} >
                                                                         <i className="fa fa-edit"></i>
                                                                     </button>
+
+                                                                    <button className='btn btn-sm btn-danger ' onClick={e => DeleteItemCart(item)}>
+                                                                        <i className="fa fa-trash"></i>
+                                                                    </button>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -193,6 +243,17 @@ export default function Sale() {
                         </div>
                     </div>
                 </div>
+                <Modal id="modalConfigqty" title="จำนวนสินค้า">
+                    <form onSubmit={handleUpdateqty}>
+                        <div className="form-group">
+                            <label>จำนวนสินค้า </label>
+                            <input type="number" className="form-control" id="editqty" placeholder="qty" value={item.qty || ''}  onChange={e => setItem({...item, qty: e.target.value})}  />
+                        </div>
+                    </form>
+                    <button type='submit' onClick={handleUpdateqty} className="btn btn-info ml-2 w-100">
+                            <i className="fa fa-times"></i> แก้ไขจำนวนสินค้า
+                    </button>
+                </Modal>
             </Template>
         </div>
     )
