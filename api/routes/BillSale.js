@@ -21,8 +21,20 @@ Router.get('/openBill', Service.isLogin, async(req,res) => {
 
 Router.get('/list', Service.isLogin, async(req, res) => {
     try {
-        const payload = {
-            userId:req.member,
+        let payload = {}
+        if(req.query.startDate && req.query.endDate != undefined){
+            payload = {
+                userId:req.member,
+                startDate:req.query.startDate,
+                endDate:req.query.endDate
+            }
+           
+        }else{
+            payload = {
+                userId:req.member,
+                startDate:"",
+                endDate:""
+            }
         }
         const result = await BillSaleController.SaleList(payload)
         return res.status(200).json(result)
