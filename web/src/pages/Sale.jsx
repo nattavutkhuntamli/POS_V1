@@ -262,7 +262,7 @@ export default function Sale() {
         <div>
             <Template>
                 <Header title="รายการสินค้า" breadMain="หน้าแรก" breadActive="สินค้า" />
-                <div className="card" >
+                <div className="card"  style={{ maxHeight: "80vh", overflowY: "auto"  }}>
                     <div className="card-header bg-white">
                         <h3 className="card-title"> ขายสินค้า </h3>
                         <div className="card-tools">
@@ -271,30 +271,37 @@ export default function Sale() {
                             <button className='btn btn-secondary me-2' onClick={handleLastBill} data-toggle="modal" data-target="#modalLastBill"> <i className=' fa fa-file-alt  me-2'></i>บิลล่าสุด</button>
                         </div>
                     </div>
-                    <div className="card-body" style={{ maxHeight: "80vh", overflowY: "auto" }}>
+                    <div className="card-body" >
                         <div className="row">
                             <div className="col-sm-9">
                                 <div className="row">
-                                    {products.length > 0 ? products.map(item => (
-                                        <div className="col-lg-3 col-md-6" key={item.id} onClick={e => handleSave(item)} style={{ cursor: "pointer" }}>
-                                            <div className="card d-flex flex-column align-items-center text-nowrap">
-                                                <div className="text-center">
-                                                    <img className="card-img" src={`${config.host + item.productImages[0].imageName}`} alt={item.name} width={'200px'} height={'200px'} />
-                                                </div>
-                                                <div className="card-body pt-4">
-                                                    <div className="text-muted text-center mt-auto">{item.name}</div>
-                                                    <div className="text-center">
-                                                        <div className="font-weight-bold"><span className="text-dark">{parseInt(item.price).toLocaleString('th')} บาท</span></div>
+                                  <div className="card border-0  shadow-none " style={{ boxShadow :"0"}}>
+                                    <div className="card-body" style={{ maxHeight: "80vh", overflowY: "auto" }}>
+                                        <div className="row">
+                                            {products.length > 0 ? products.map(item => (
+                                                <div className="col-lg-3 col-md-6" key={item.id} onClick={e => handleSave(item)} style={{ cursor: "pointer" }}>
+                                                    <div className="card d-flex flex-column align-items-center text-nowrap" >
+                                                        <div className="text-center">
+                                                            <img className="card-img mt-2" src={`${config.host + item.productImages[0].imageName}`} alt={item.name} width={'200px'} height={'200px'} />
+                                                        </div>
+                                                        <div className="card-body pt-4">
+                                                            <div className="text-muted text-center mt-auto">{item.name}</div>
+                                                            <div className="text-center">
+                                                                <div className="font-weight-bold"><span className="text-dark">{parseInt(item.price).toLocaleString('th')} บาท</span></div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            )) : ""}
                                         </div>
-                                    )) : ""}
+
+                                    </div>
+                                  </div>
                                 </div>
                             </div>
                             <div className="col-12 col-sm-3">
-                                <div className="card" style={{ border: "2px dotted", maxHeight: "100%", overflowY: "auto" }}>
-                                    <div className="card-body">
+                                <div className="card">
+                                    <div className="card-body"  style={{ border: "2px dotted", maxHeight: "100%", overflowY: "auto" }}>
                                         <div className="text-end">
                                             <span className='btn btn-secondary h2 pe-3 ps-3 w-100 p-3 text-right' style={{ borderRadius: "0", color: "#70FE3F", backgroundColor: "black" }}>  {parseInt(totalPrice).toLocaleString('th') || 0.00}</span>
                                         </div>
@@ -329,7 +336,9 @@ export default function Sale() {
                                         ) : (
                                             <div className="card mt-3">
                                                 <div className="card-body">
-                                                    <div className="text-center">ไม่มีสินค้าในตะกร้า</div>
+                                                    <div className="text-center">
+                                                        <img src="https://go.pospos.co/assets/images/ic-avatar-ready-to-sale.svg" className='img-top'/>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )}
