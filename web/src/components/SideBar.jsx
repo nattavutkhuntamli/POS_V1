@@ -235,6 +235,27 @@ function SideBar() {
                                 </Link>
                             </li>
 
+                            <li className="nav-header">รายงาน</li>
+                            <li className="nav-item">
+                                <Link to='/billsale' className={location.pathname === '/billsale' ? 'nav-link active' : 'nav-link'}>
+                                    <i className="nav-icon fas fa-file-alt "></i>
+                                    <p className="text">  ยอดขายรายวัน</p>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <a onClick={handleProfile} className="nav-link" style={{ cursor: "pointer" }} data-bs-toggle="modal" data-bs-target="#modalEditProfile" tabIndex="-1" >
+                                    <i className="nav-icon fas fa-list-alt"></i>
+                                    <p className="text">  บิลขาย</p>
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a onClick={handleProfile} className="nav-link" style={{ cursor: "pointer" }} data-bs-toggle="modal" data-bs-target="#modalEditProfile" tabIndex="-1" >
+                                    <i className="nav-icon fas fa-home"></i>
+                                    <p className="text">  รับสินค้าเข้า Stock</p>
+                                </a>
+                            </li>
+
                             <li className="nav-header">ตั้งค่า</li>
                             <li className="nav-item">
                                 <a onClick={handleProfile} className="nav-link" style={{ cursor: "pointer" }} data-bs-toggle="modal" data-bs-target="#modalEditProfile" tabIndex="-1" >

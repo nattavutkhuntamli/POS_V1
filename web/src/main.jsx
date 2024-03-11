@@ -8,6 +8,7 @@ import About from './pages/About.jsx';
 import Product from './pages/Product.jsx';
 import User from './pages/User.jsx';
 import Sale from './pages/Sale.jsx';
+import BillSales from './pages/BillSales.jsx';
 const ProtectedRoute = ({ element: Element, ...rest }) => {
   const isLoginMember = localStorage.getItem('isLoginMember');
   if (isLoginMember === null) {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
   {
     path: "/sale",
     element: <ProtectedRoute element={Sale} />
+  },
+  {
+    path: "/billsale",
+    element: <ProtectedRoute element={BillSales} />
   }
 ]);
 
