@@ -5,11 +5,23 @@ const { Sequelize } = require('sequelize')
 module.exports = {
     SaleList: async(payload) => {
         try {
+           BillSaleModels.hasMany(BillSaleDetailModels)
+           BillSaleDetailModels.belongsTo(ProductModels)
            const results = await BillSaleModels.findAll({
             where:{
-                userId:payload.userId
+                userId:payload.userId,
+                status:'pay'
             },
-            order:[['id','desc']]
+            order:[['id','desc']],
+            include: {
+                model:BillSaleDetailModels,
+                attributes:['id','billSaleId','productId','price','qty','userId'],
+                order:[['id','desc']],
+                include: {
+                    model:ProductModels,
+                    attributes:['barcode','name'],
+                },
+            }
            })
            if(results.length > 0){
             return {

@@ -184,8 +184,6 @@ export default function Sale() {
 
     const handleEndSale = async (e) => {
         e.preventDefault()
-        console.log(InputMoney)
-        console.log(totalPrice)
         try {
             Swal.fire({
                 icon: 'question',
