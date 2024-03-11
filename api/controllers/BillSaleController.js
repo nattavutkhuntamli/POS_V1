@@ -1,6 +1,7 @@
 const BillSaleModels = require('../models/BillSaleModels')
 const BillSaleDetailModels = require('../models/BillSaleDetailModels')
 const ProductModels = require('../models/ProductModels')
+const { Sequelize } = require('sequelize')
 module.exports = {
     BillAll: async() => {
         try {
@@ -41,13 +42,17 @@ module.exports = {
                   userId:payload.userId,
                   price:item.price,
                }
-            //    logging ture แสดงคำสั่ง sql
-            //    const createdBill = await  BillSaleDetailModels.create(payloadData, {logging:true})
-               //ค้นหาสินค้าก่อนว่ามีอยู่่หรือเปล่า
                const billSaleDetail = await BillSaleDetailModels.findOne({ where:payloadData})
                if(billSaleDetail == null) {
                     payloadData.qty =1;
-                    const createdBill = await  BillSaleDetailModels.create(payloadData)
+                    const data = { 
+                        billSaleId:parseInt(currentBill.id),
+                        productId:item.id,
+                        qty:payloadData.qty,
+                        price:parseInt(item.price),
+                        userId:payload.userId,
+                    }
+                    const createdBill = await  BillSaleDetailModels.create(data)
                     if(createdBill){
                         return {
                             statusCode: 200,
@@ -100,7 +105,7 @@ module.exports = {
                     include: {
                         model:ProductModels,
                         attributes:['name']
-                    }
+                    },
                 },
               
             },{logging:true})
@@ -118,7 +123,86 @@ module.exports = {
             
         }
     },
+    LastBill: async(payload) => {
+        try {
+            BillSaleModels.hasMany(BillSaleDetailModels)
+            BillSaleDetailModels.belongsTo(ProductModels)
+            const result = await BillSaleModels.findOne({
+                where:{
+                    status:'pay',
+                    userId:payload.userId
+                },
+                order:[['id','desc']],
+                include: {
+                    model:BillSaleDetailModels,
+                    attributes:['price','qty'],
+                    order:[['id','desc']],
+                    include: {
+                        model:ProductModels,
+                        attributes:['barcode','name'],
+                    }
+                },
+            })
+            if(result!= null){
+                return {
+                    statusCode: 200,
+                    message:'success',
+                    body: result
+                }
+            }else{
+                throw { statusCode: 404, message: "Product not found" };
+            }
+        } catch (error) {
+            throw { statusCode:400, message:error.message}
+        }
+    },
+    TodayBill: async(payload) => {
+        try {
+            BillSaleModels.hasMany(BillSaleDetailModels)
+            BillSaleDetailModels.belongsTo(ProductModels)
+            
+            /**
+             *  ตั้งค่าวันที่ค้นหา
+             */
+            const StartDate = new Date();
+            StartDate.setHours(0,0,0,0)
+            const Now = new Date();
+            
+            const Op = Sequelize.Op;
 
+
+            const results = await BillSaleModels.findAll({
+                where:{
+                    status:'pay',
+                    userId:payload.userId,
+                    payData:{
+                        [Op.between]:[StartDate.toISOString(),Now.toISOString()]
+                    }
+                },
+                order:[['id','desc']],
+                include: {
+                    model:BillSaleDetailModels,
+                    attributes:['price','qty'],
+                    order:[['id','desc']],
+                    include: {
+                        model:ProductModels,
+                        attributes:['barcode','name'],
+                    }
+                },
+            })
+            if(results!= null){
+                return {
+                    statusCode: 200,
+                    message:'success',
+                    body: results
+                }
+            }else{
+                throw { statusCode: 404, message: "Product not found" };
+            }
+        } catch (error) {
+            throw { statusCode:400, message:error.message}
+        }
+    },
     UpdateQty: async(item) => {
         try {
             console.log(item.id)
@@ -170,6 +254,43 @@ module.exports = {
                 }
             }else{
                 throw { statusCode:400, message: 'ลบรายการสินค้าไม่สำเร็จ'}
+            }
+        } catch (error) {
+            throw { statusCode:400, message:error.message}
+        }
+    },
+
+    EndSale: async(payload) => {
+        try {
+            const isBillSaleId = await BillSaleModels.findOne({
+                where:{
+                    userId:payload.userId,
+                    status:'open',
+                }
+            });
+            if(isBillSaleId){
+                const CloseBill = await BillSaleModels.update(
+                    {
+                        status:'pay',
+                        payData:new Date()
+                    },
+                    {
+                        where:{
+                            status:'open',
+                            userId:payload.userId
+                        }
+                    }
+                );
+                if(CloseBill){
+                    return {
+                        statusCode: 200,
+                        message: "บิลปิดการขายสำเร็จ",
+                    }
+                }else{
+                    throw { statusCode:400, message: 'บิลปิดการขายไม่สำเร็จ'}
+                }
+            }else{
+                throw { statusCode:400, message: 'ไม่พบบิลรายการที่จะปิดการขายนี้'}
             }
         } catch (error) {
             throw { statusCode:400, message:error.message}

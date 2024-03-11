@@ -19,6 +19,8 @@ Router.get('/openBill', Service.isLogin, async(req,res) => {
     }
 })
 
+
+
 Router.get('/currentBillInfo', Service.isLogin, async(req,res) => {
     try {
         const payload = {
@@ -26,6 +28,49 @@ Router.get('/currentBillInfo', Service.isLogin, async(req,res) => {
             status:'open'
         }
         const result = await BillSaleController.SaleInfo(payload)
+        return res.status(200).json(result)
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message ||'server error'
+        })
+    }
+})
+Router.get('/endSale', Service.isLogin, async(req,res) => {
+    try {
+        const payload = {
+            userId:req.member,
+            status:'pay'
+        }
+        const result = await BillSaleController.EndSale(payload)
+        return res.status(200).json(result)
+    } catch (error) {
+      console.log(error)
+      return res.status(error.statusCode || 500).json({
+          message: error.message ||'server error'
+      });
+    }
+})
+
+Router.get('/lastBill', Service.isLogin, async(req,res) => {
+    try {
+        const payload = {
+            userId:req.member,
+        }
+        const result = await BillSaleController.LastBill(payload)
+        return res.status(200).json(result)
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message ||'server error'
+        })
+    }
+})
+
+Router.get('/todayBill', Service.isLogin, async(req,res) => {
+    try {
+        const payload = {
+            userId:req.member,
+        }
+        const result = await BillSaleController.TodayBill(payload)
         return res.status(200).json(result)
     } catch (error) {
         return res.status(error.statusCode || 500).json({
@@ -70,4 +115,6 @@ Router.delete('/deleteItemCart/:id', Service.isLogin, async(req,res) => {
         })
     }
 })
+
+
 module.exports = Router;

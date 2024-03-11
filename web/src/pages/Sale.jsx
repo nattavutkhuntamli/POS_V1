@@ -11,7 +11,10 @@ export default function Sale() {
     const [currentBill, setcurrentBill] = useState([])
     const [totalPrice, setTotalPrice] = useState(0)
     const [item, setItem] = useState({})
-    const [InputMoney , setInputMoney] = useState(0)
+    const [InputMoney, setInputMoney] = useState(0)
+    const [LastBill, setLastBill] = useState({})
+    const [TodayBill, setTodayBill] = useState([])
+    const [SelectedBill, setSelectedBill] = useState({})
     useEffect(() => {
         fetchData()
         openBill()
@@ -43,7 +46,10 @@ export default function Sale() {
                 sumtotalPrice(res.data.body.billSaleDetails)
             }
         } catch (error) {
-            console.log(error)
+            if (error.response.data.message === 'Product not found') {
+                setcurrentBill([])
+                setTotalPrice(0)
+            }
         }
     }
     const sumtotalPrice = (currentBill) => {
@@ -81,7 +87,7 @@ export default function Sale() {
         }
     }
 
-    const DeleteItemCart = async(item) => {
+    const DeleteItemCart = async (item) => {
         try {
             Swal.fire({
                 icon: 'question',
@@ -89,20 +95,20 @@ export default function Sale() {
                 text: 'ยืนยันการลบสินค้า',
                 confirmButtonColor: '#3085d6',
                 showDenyButton: true,
-            }).then(async(res) => {
+            }).then(async (res) => {
                 if (res.isConfirmed) {
                     const url = `${config.api_path}billsale/deleteItemCart/${item.id}`;
-                    const send = await axios.delete(url,config.headers())
+                    const send = await axios.delete(url, config.headers())
                     if (send.status === 200) {
                         Swal.fire({
-                            icon:'success',
+                            icon: 'success',
                             title: send.data.message,
                             text: send.data.message,
                         }).then(() => {
                             fetchBillSaleDetail()
                         })
                     }
-                }else{
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'ยกเลิก',
@@ -116,40 +122,51 @@ export default function Sale() {
                 title: 'ไม่สำเร็จ',
                 text: error.message,
             })
-            
+
         }
     }
-    const handleUpdateqty = async(e) => {
+    const handleUpdateqty = async (e) => {
         e.preventDefault();
         try {
-           Swal.fire({
-            icon: 'question',
-            title: 'แก้ไขจำนวน',
-            text: 'ยืนยันการแก้ไขจำนวน',
-            confirmButtonColor: '#3085d6',
-            showDenyButton: true,
-           }).then(async(isConfirmed) => {
-              if(isConfirmed) {
-                    const url = `${config.api_path}billsale/updateQty/${item.id}`
-                    const send = await axios.put(url,item,config.headers())
-                    if (send.status === 200) {
+            Swal.fire({
+                icon: 'question',
+                title: 'แก้ไขจำนวน',
+                text: 'ยืนยันการแก้ไขจำนวน',
+                confirmButtonColor: '#3085d6',
+                showDenyButton: true,
+            }).then(async (isConfirmed) => {
+                if (isConfirmed) {
+                    if (item.qty > 0 && item.qty !== -1 && item.qty > -1) {
+                        const url = `${config.api_path}billsale/updateQty/${item.id}`
+                        const send = await axios.put(url, item, config.headers())
+                        if (send.status === 200) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: send.data.message,
+                                text: send.data.message,
+                            }).then(() => {
+                                fetchBillSaleDetail()
+                                handleClose()
+                            })
+                        }
+                    } else {
                         Swal.fire({
-                            icon:'success',
-                            title: send.data.message,
-                            text: send.data.message,
+                            icon: 'warning',
+                            title: 'คำเตือน',
+                            text: 'กรุณาระบุจำนวนสินค้าใหม่ที่ไม่ใช่ 0 และไม่ติดลบ',
                         }).then(() => {
                             fetchBillSaleDetail()
-                            handleClose()
                         })
                     }
-              }else{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ยกเลิก',
-                    text: 'ยกเลิกการแก้ไขจำนวน',
-                })
-              }
-           })
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ยกเลิก',
+                        text: 'ยกเลิกการแก้ไขจำนวน',
+                    })
+                }
+            })
         } catch (error) {
             Swal.fire({
                 icon: 'error',
@@ -161,9 +178,86 @@ export default function Sale() {
     const handleClose = async (e) => {
         const btn = document.getElementsByClassName('btnClose');
         for (let i = 0; i < btn.length; i++) {
-          btn[i].click();
+            btn[i].click();
         }
-      };
+    };
+
+    const handleEndSale = async (e) => {
+        e.preventDefault()
+        console.log(InputMoney)
+        console.log(totalPrice)
+        try {
+            Swal.fire({
+                icon: 'question',
+                title: 'ยืนยันการจบการขาย',
+                text: 'ยืนยันการจบการขาย',
+                confirmButtonColor: '#3085d6',
+                showDenyButton: true,
+            }).then(async (res) => {
+                if (res.isConfirmed) {
+                    if (InputMoney - totalPrice == 0) {
+                        const send = await axios.get(`${config.api_path}billsale/endSale`, config.headers());
+                        if (send.status === 200) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: send.data.message,
+                                text: send.data.message,
+                            }).then(() => {
+                                openBill()
+                                fetchBillSaleDetail()
+                                handleClose()
+                                setInputMoney(0)
+                            })
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'คำเตือน',
+                            text: 'จำนวนเงินที่จ่ายไม่พอ',
+                        }).then(() => {
+                            fetchBillSaleDetail()
+                        })
+                    }
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ยกเลิก',
+                        text: 'ยกเลิกการจบการขาย',
+                    })
+                }
+            })
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'ไม่สำเร็จ',
+                text: error.message,
+            })
+        }
+    }
+
+    const handleLastBill = async (e) => {
+        try {
+            const send = await axios.get(`${config.api_path}billsale/lastBill`, config.headers());
+            if (send.status == 200) {
+                setLastBill(send.data.body)
+            }
+        } catch (error) {
+            console.log(error)
+            setLastBill({})
+        }
+    }
+    const handleTodayBill = async (e) => {
+        try {
+            const send = await axios.get(`${config.api_path}billsale/todayBill`, config.headers());
+            if (send.status == 200) {
+                setTodayBill(send.data.body)
+            }
+        } catch (error) {
+            console.log(error)
+            setTodayBill([])
+        }
+    }
     return (
         <div>
             <Template>
@@ -173,8 +267,8 @@ export default function Sale() {
                         <h3 className="card-title"> ขายสินค้า </h3>
                         <div className="card-tools">
                             <button className='btn btn-success me-2' data-toggle="modal" data-target="#modalEndSale"> <i className=' fa fa-check  me-2'></i>จบการขาย</button>
-                            <button className='btn btn-info me-2'> <i className=' fa fa-file  me-2'></i>บิลวันนี้</button>
-                            <button className='btn btn-secondary me-2'> <i className=' fa fa-file-alt  me-2'></i>บิลล่าสุด</button>
+                            <button className='btn btn-info me-2' onClick={handleTodayBill} data-toggle="modal" data-target="#modaltodayBill"> <i className=' fa fa-file  me-2'></i>บิลวันนี้</button>
+                            <button className='btn btn-secondary me-2' onClick={handleLastBill} data-toggle="modal" data-target="#modalLastBill"> <i className=' fa fa-file-alt  me-2'></i>บิลล่าสุด</button>
                         </div>
                     </div>
                     <div className="card-body" style={{ maxHeight: "80vh", overflowY: "auto" }}>
@@ -208,15 +302,16 @@ export default function Sale() {
                                             currentBill.map((item, index) => (
                                                 <div className="card mt-3" key={index} >
                                                     <div className="card-body text-nowrap">
+
                                                         <div className='mb-2 '>{item.product.name}</div>
                                                         <div className='mb-1  text-nowrap'>จำนวนสินค้า: <b className="text-danger">{item.qty}</b>  | ราคาชิ้นละ: {parseInt(item.price).toLocaleString('th')}</div>
                                                         <div className='mb-1 '>รวม {(item.qty * parseInt(item.price)).toLocaleString('th')} บาท</div>
                                                         <div className="row">
                                                             <div className="col-sm-12">
                                                                 <div className="float-end">
-                                                                   
 
-                                                                    <button className='btn btn-sm  btn-info me-2'  data-bs-toggle="modal" data-bs-target="#modalConfigqty" tabIndex={item.id} onClick={e => setItem(item)} >
+
+                                                                    <button className='btn btn-sm  btn-info me-2' data-bs-toggle="modal" data-bs-target="#modalConfigqty" tabIndex={item.id} onClick={e => setItem(item)} >
                                                                         <i className="fa fa-edit"></i>
                                                                     </button>
 
@@ -248,11 +343,11 @@ export default function Sale() {
                     <form onSubmit={handleUpdateqty}>
                         <div className="form-group">
                             <label>จำนวนสินค้า </label>
-                            <input type="number" className="form-control" id="editqty" placeholder="qty" value={item.qty || ''}  onChange={e => setItem({...item, qty: e.target.value})}  />
+                            <input type="number" className="form-control" id="editqty" placeholder="qty" value={item.qty || ''} onChange={e => setItem({ ...item, qty: e.target.value })} />
                         </div>
                     </form>
                     <button type='submit' onClick={handleUpdateqty} className="btn btn-info ml-2 w-100">
-                            <i className="fa fa-times"></i> แก้ไขจำนวนสินค้า
+                        <i className="fa fa-times"></i> แก้ไขจำนวนสินค้า
                     </button>
                 </Modal>
 
@@ -262,14 +357,14 @@ export default function Sale() {
                             <div><label htmlFor="">ยอดเงินทั้งหมด</label></div>
                             <div><input type="text" className='form-control text-end' value={parseInt(totalPrice).toLocaleString('th-TH')} disabled /></div>
                             <div className='mt-3'><label htmlFor="">รับเงิน</label></div>
-                            <div><input type="text" className='form-control text-end' onChange={e => setInputMoney(e.target.value)} /></div>
+                            <div><input type="text" className='form-control text-end' value={InputMoney} onChange={e => setInputMoney(e.target.value)} /></div>
                             <div className='mt-3'><label htmlFor="">เงินทอน</label></div>
                             <div><input type="text" className='form-control text-end' value={(InputMoney - totalPrice) || 0} readOnly /></div>
                             <div className="text-center">
-                                <button className='btn btn-success mt-3 me-2'> 
+                                <button type="button" className='btn btn-success mt-3 me-2' onClick={() => setInputMoney(totalPrice)}>
                                     <i className="fa fa-check me-2"></i> จ่ายพอดี
                                 </button>
-                                <button className='btn btn-primary mt-3'> 
+                                <button onClick={handleEndSale} className='btn btn-primary mt-3'>
                                     <i className="fa fa-check me-2"></i> จบการขาย
                                 </button>
                             </div>
@@ -277,6 +372,116 @@ export default function Sale() {
                     </form>
                 </Modal>
 
+                <Modal id="modalLastBill" title="บิลรายการล่าสุด" modalSize="modal-lg">
+                    <div className='mt-2 table-responsive-sm'>
+                        <table className='mt-2 table  table-bordered table-hover table-sm text-nowrap'>
+                            <thead>
+                                <tr>
+                                    <th scope="col">ลำดับ</th>
+                                    <th scope="col">Barcode</th>
+                                    <th scope="col">รายการ</th>
+                                    <th scope="col" className='text-end'>ราคา</th>
+                                    <th scope="col" className='text-end'>จำนวน</th>
+                                    <th scope="col" className='text-end'>ราคารวม</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {LastBill.billSaleDetails != undefined ? LastBill.billSaleDetails.map(
+                                    (item, index) => (
+                                        <tr key={index}>
+                                            <td className='text-center'>{index + 1}</td>
+                                            <td>{item.product.barcode}</td>
+                                            <td >{item.product.name}</td>
+                                            <td className='text-end'>{parseInt(item.price).toLocaleString('th')}</td>
+                                            <td className='text-end'> {item.qty}</td>
+                                            <td className='text-end'>{parseInt(item.price * item.qty).toLocaleString('th')}</td>
+                                        </tr>
+                                    )
+                                ) : <tr className='text-center'><td colSpan={6}>ไม่มีข้อมูล</td></tr>}
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </Modal>
+                <Modal id="modaltodayBill" title="บิลรายการวันนี้" >
+                    <div className='mt-2 table-responsive-sm'>
+                        <table className='mt-2 table table-bordered table-hover table-sm text-nowrap'>
+                            <thead>
+                                <tr className='text-center'>
+                                    <th width={120}></th>
+                                    <th scope="col"  >เลขบิล</th>
+                                    <th scope="col"  >วัน เวลา ที่ขาย</th>
+                                    <th scope="col"   >จำนวนที่ขาย</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {TodayBill.length !== 0 ? TodayBill.map((billItem, billIndex) => (
+                                    <React.Fragment key={billIndex}>
+                                        <tr className='text-center'>
+                                            <td>
+                                                <button className='btn btn-sm  btn-primary w-100 me-2'
+                                                    data-toggle="modal" data-target="#modalBillSaleDetail"
+                                                    tabIndex={billIndex}
+                                                    onClick={e => setSelectedBill(billItem.billSaleDetails)}
+                                                >
+                                                    <i className="fa fa-file me-2"></i> ดูรายการ
+                                                </button>
+                                            </td>
+                                            <td  >{billItem.id}</td>
+                                            <td >{new Date(billItem.payData).toLocaleString('th-TH')}</td>
+                                            <td >{billItem.billSaleDetails.length}</td>
+                                        </tr>
+                                    </React.Fragment>
+                                )) : <tr className='text-center'><td colSpan={8}>ไม่มีข้อมูล</td></tr>}
+                            </tbody>
+                        </table>
+                    </div>
+                </Modal>
+
+                <Modal id="modalBillSaleDetail" title="รายละเอียดในบิล" modalSize="modal-lg">
+                    <div className='mt-2 table-responsive-sm'>
+                        <table className='mt-2 table table-bordered table-hover table-sm text-nowrap'>
+                            <thead>
+                                <tr className='text-center'>
+                                    <th>ลำดับ</th>
+                                    <th>barcode</th>
+                                    <th>ชื่อสินค้า</th>
+                                    <th className='text-end'>ราคาสินค้า</th>
+                                    <th className='text-end'>จำนวนสินค้า</th>
+                                    <th className='text-end'>ยอดรวม</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {SelectedBill !== undefined && SelectedBill.length > 0 ? (
+                                    <>
+                                        {SelectedBill.map((billItem, index) => (
+                                            <React.Fragment key={index}>
+                                                <tr>
+                                                    <td className='text-center'>{index + 1}</td>
+                                                    <td>{billItem.product.barcode}</td>
+                                                    <td>{billItem.product.name}</td>
+                                                    <td className='text-end'>{parseInt(billItem.price).toLocaleString('th')}</td>
+                                                    <td className='text-end'>{billItem.qty}</td>
+                                                    <td className='text-end'>{parseInt(billItem.price * billItem.qty).toLocaleString('th')}</td>
+                                                </tr>
+                                            </React.Fragment>
+                                        ))}
+                                        <tr>
+                                            <td colSpan={5} className='text-end'>ยอดขายรวม</td>
+                                            <td className='text-end'>
+                                                {SelectedBill.reduce((total, billItem) => total + billItem.price * billItem.qty, 0).toLocaleString('th')}
+                                            </td>
+                                        </tr>
+                                    </>
+                                ) : (
+                                    <tr><td colSpan={6}>ไม่มีข้อมูล</td></tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </Modal>
             </Template>
         </div>
     )
