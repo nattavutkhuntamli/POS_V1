@@ -5,7 +5,7 @@ export default function BillSales() {
   return (
     <div>
     <Template>
-      <Header title="รายงานยอดขายรายวัน" breadMain="หน้าแรก" breadActive="รายงานยอดขายรายวัน" />
+      <Header title="รายงานบิลขาย" breadMain="หน้าแรก" breadActive="รายงานบิลขาย" />
       <div className="card">
         <div className="card-header">
           <h3 className="card-title">Title</h3>

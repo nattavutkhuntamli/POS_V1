@@ -237,17 +237,18 @@ function SideBar() {
 
                             <li className="nav-header">รายงาน</li>
                             <li className="nav-item">
-                                <Link to='/billsale' className={location.pathname === '/billsale' ? 'nav-link active' : 'nav-link'}>
+                                <Link to='/sss' className={location.pathname === '/ss' ? 'nav-link active' : 'nav-link'}>
                                     <i className="nav-icon fas fa-file-alt "></i>
                                     <p className="text">  ยอดขายรายวัน</p>
                                 </Link>
                             </li>
 
                             <li className="nav-item">
-                                <a onClick={handleProfile} className="nav-link" style={{ cursor: "pointer" }} data-bs-toggle="modal" data-bs-target="#modalEditProfile" tabIndex="-1" >
+                                <Link to='/billsale' className={location.pathname === '/billsale' ? 'nav-link active' : 'nav-link'}>
                                     <i className="nav-icon fas fa-list-alt"></i>
                                     <p className="text">  บิลขาย</p>
-                                </a>
+                                </Link>
+
                             </li>
                             <li className="nav-item">
                                 <a onClick={handleProfile} className="nav-link" style={{ cursor: "pointer" }} data-bs-toggle="modal" data-bs-target="#modalEditProfile" tabIndex="-1" >

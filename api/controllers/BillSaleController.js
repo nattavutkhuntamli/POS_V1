@@ -3,9 +3,23 @@ const BillSaleDetailModels = require('../models/BillSaleDetailModels')
 const ProductModels = require('../models/ProductModels')
 const { Sequelize } = require('sequelize')
 module.exports = {
-    BillAll: async() => {
+    SaleList: async(payload) => {
         try {
-           console.log('ee')
+           const results = await BillSaleModels.findAll({
+            where:{
+                userId:payload.userId
+            },
+            order:[['id','desc']]
+           })
+           if(results.length > 0){
+            return {
+                statusCode: 200,
+                message:'success',
+                body: results
+            }
+           }else{
+             throw { statusCode: 404, message: "Bill not found" };
+           }
         } catch (error) {
             throw { statusCode:400, message:error.message}
         }

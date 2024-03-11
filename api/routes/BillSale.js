@@ -19,7 +19,19 @@ Router.get('/openBill', Service.isLogin, async(req,res) => {
     }
 })
 
-
+Router.get('/list', Service.isLogin, async(req, res) => {
+    try {
+        const payload = {
+            userId:req.member,
+        }
+        const result = await BillSaleController.SaleList(payload)
+        return res.status(200).json(result)
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message ||'server error'
+        })
+    }
+})
 
 Router.get('/currentBillInfo', Service.isLogin, async(req,res) => {
     try {
