@@ -269,7 +269,7 @@ module.exports = {
 
       BillSaleModels.hasMany(BillSaleDetailModels)
       BillSaleDetailModels.belongsTo(ProductModels)
-      console.log(daysInMonth)
+
      
       for(let i = 1; i <= daysInMonth; i++) {
         const results = await BillSaleModels.findAll({
@@ -302,7 +302,7 @@ module.exports = {
         //หาค่า sum ข้อมูลบิลยอดขายแต่ละวัน
         let sum = 0 ;
 
-        for(let j = 0; j <= results.length; j++){
+        for(let j = 0; j < results.length; j++){
           const result = results[j];
           for(let k = 0; k < result.billSaleDetails.length; k++){
               const item =  result.billSaleDetails[k];
@@ -316,7 +316,6 @@ module.exports = {
            sum:sum
         });
       }
-      console.log(arr)
       return {
         statusCode: 200,
         message: "success",

@@ -54,7 +54,6 @@ export default function BillSaleSumPerDay() {
             const path = `${config.api_path}/billsale/listByYearAndMonth?year=${currentYear}&month=${currentMonth}`
             const response = await axios.get(path, config.headers())
             if (response.status === 200) {
-                console.log(response)
                 // console.log(response.data.results)
                 setBillSales(response.data.results)
             }
@@ -143,13 +142,91 @@ export default function BillSaleSumPerDay() {
                         <table className='mt-2 table table-bordered table-hover table-sm text-nowrap'>
                             <thead>
                                 <tr className='text-center'>
+                                    <th></th>
                                     <th>เลขบิล</th>
-                                    <th className='text-end'>วันที่</th>
+                                    <th width={150}>จำนวนขายต่อรายการ</th>
+                                    <th width={150} className='text-end'>วันที่</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                                {currentBillSale.length > 0 && currentBillSale != undefined ?
+                                    currentBillSale.map((Item, index) =>
+                                    (
+                                        <React.Fragment key={index}>
+                                            <tr>
+                                                <td>
+                                                    <button className='btn btn-primary me-2 w-100' onClick={e => setBillSaleDetails(Item.billSaleDetails)} data-toggle="modal" data-target="#modalBillSaleDetailItem"  >
+                                                        <i className='fa fa-file-alt me-2'></i> รายละเอียด
+                                                    </button>
+                                                </td>
 
+                                                <td className='text-center'>{Item.id}</td>
+                                                <td className='text-center'>{parseInt(Item.billSaleDetails.length).toLocaleString('th-TH')} </td>
+                                                <td className='text-end'>{new Date(Item.createdAt).toLocaleString('th-TH')}</td>
+                                            </tr>
+                                        </React.Fragment>
+                                    )
+                                    ) : null}
+                                {/* {currentBillSale.length > 0 && currentBillSale !== undefined ?
+                                    currentBillSale.map((billItem, index) => (
+                                        billItem.billSaleDetails.map((billItemDetails, index) => {
+                                            return (
+                                                 <React.Fragment key={index}>
+                                                    <tr>
+                                                       <td> {billItemDetails.billSaleId}</td>
+                                                       <td> </td>
+                                                    </tr>
+                                                </React.Fragment>
+                                            );
+                                        })
+                                    ))
+                                    : null
+                                } */}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </Modal>
+
+                <Modal id="modalBillSaleDetailItem" title="รายละเอียดบิลการขาย" modalSize="modal-lg">
+                    {console.log(billSaleDetails)}
+                    <div className='mt-2 table-responsive-sm'>
+                        <table className='mt-2 table table-bordered table-hover table-sm text-nowrap'>
+                            <thead>
+                                <tr className='text-center'>
+                                    <th>ลำดับ</th>
+                                    <th>barcode</th>
+                                    <th>ชื่อสินค้า</th>
+                                    <th className='text-end'>ราคาสินค้า</th>
+                                    <th className='text-end'>จำนวนสินค้า</th>
+                                    <th className='text-end'>ยอดรวม</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {billSaleDetails !== undefined && billSaleDetails.length > 0 ? (
+                                    <>
+                                        {billSaleDetails.map((billItem, index) => (
+                                            <React.Fragment key={index}>
+                                                <tr>
+                                                    <td className='text-center'>{index + 1}</td>
+                                                    <td>{billItem.product.barcode}</td>
+                                                    <td>{billItem.product.name}</td>
+                                                    <td className='text-end'>{parseInt(billItem.price).toLocaleString('th')}</td>
+                                                    <td className='text-end'>{billItem.qty}</td>
+                                                    <td className='text-end'>{parseInt(billItem.price * billItem.qty).toLocaleString('th')}</td>
+                                                </tr>
+                                            </React.Fragment>
+                                        ))}
+                                        <tr>
+                                            <td colSpan={5} className='text-end'>ยอดขายรวม</td>
+                                            <td className='text-end'>
+                                                {billSaleDetails.reduce((total, billItem) => total + billItem.price * billItem.qty, 0).toLocaleString('th')}
+                                            </td>
+                                        </tr>
+                                    </>
+                                ) : (
+                                    <tr><td colSpan={6}>ไม่มีข้อมูล</td></tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
