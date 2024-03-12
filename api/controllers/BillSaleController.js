@@ -258,34 +258,69 @@ module.exports = {
       throw { statusCode: 400, message: error.message };
     }
   },
-  listByYearAndMonth: async(payload) =>{
+  SearchByYearAndMonth: async(payload) =>{
     try {
       let arr = [];
       let y = payload.year;
       let m = payload.month;
-      let daysInMonth = new Date(y,m,0).getDate()
+      let daysInMonth = new Date(y,m,0).getDate() //ดึงวันของเดือนนั้นว่ามีกี่วัน
       const Op = Sequelize.Op;
-       
+
+
       BillSaleModels.hasMany(BillSaleDetailModels)
       BillSaleDetailModels.belongsTo(ProductModels)
-
-      for(let i =1; i<= daysInMonth; i++) {
+      console.log(daysInMonth)
+     
+      for(let i = 1; i <= daysInMonth; i++) {
         const results = await BillSaleModels.findAll({
           where:{
             [Op.and]:[
-              Sequelize.fn('EXTRACT(YEAR FROM "billSaleDetails"."payData") = ', y),
-              Sequelize.fn('EXTRACT(MONTH FROM "billSaleDetails"."payData") = ', m),
-              Sequelize.fn('EXTRACT(DAY FROM "billSaleDetails"."payData") = ', i),
+              // Sequelize.fn ในที่นี้ fn = function
+              // EXTRACT กระจ่ายข้อมูลต่างๆ เช่น ปี วัน เดือน 
+              Sequelize.fn('EXTRACT(YEAR FROM "billSaleDetails"."createdAt") = ', y),
+              Sequelize.fn('EXTRACT(MONTH FROM "billSaleDetails"."createdAt") = ', m),
+              Sequelize.fn('EXTRACT(DAY FROM "billSaleDetails"."createdAt") = ', i),
             ]
           },
           include:{
             model:BillSaleDetailModels,
+            attributes: [
+                "id",
+                "billSaleId",
+                "productId",
+                "price",
+                "qty",
+                "userId",
+            ],
             include:{
-              model:ProductModels
+              model:ProductModels,
+              attributes: ["barcode", "name"],
             }
           }
         });
         
+        //หาค่า sum ข้อมูลบิลยอดขายแต่ละวัน
+        let sum = 0 ;
+
+        for(let j = 0; j <= results.length; j++){
+          const result = results[j];
+          for(let k = 0; k < result.billSaleDetails.length; k++){
+              const item =  result.billSaleDetails[k];
+              sum += parseInt(item.qty) * parseInt(item.price)
+          }
+        }
+
+        arr.push({
+           day:i,
+           results,
+           sum:sum
+        });
+      }
+      console.log(arr)
+      return {
+        statusCode: 200,
+        message: "success",
+        results: arr
       }
     } catch (error) {
       

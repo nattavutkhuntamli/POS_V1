@@ -3,6 +3,7 @@ import Template from '../components/Template'
 import Header from '../components/Header'
 import config from '../config';
 import axios from 'axios';
+import Modal from '../components/Modal';
 export default function BillSaleSumPerDay() {
     const [currentYear, setCurrentYear] = useState(() => {
         let mydate = new Date();
@@ -12,48 +13,51 @@ export default function BillSaleSumPerDay() {
         let arr = [];
         let myDate = new Date();
         let currentYear = myDate.getFullYear();
-        let beforeYear  = currentYear - 5
+        let beforeYear = currentYear - 5
 
-        for(let i = beforeYear; i <= currentYear; i++){
+        for (let i = beforeYear; i <= currentYear; i++) {
             arr.push(i)
         }
         return arr;
     });
     const [currentMonth, setCurrentMonth] = useState(() => {
         let mydate = new Date();
-        return mydate.getMonth()+1
+        return mydate.getMonth() + 1
     })
-    const [arrayMonth,setArrMonth] = useState(() => {
+    const [arrayMonth, setArrMonth] = useState(() => {
         let arr = [
-            { value:1, label:"มกราคม"},
-            { value:2, label:"กุมภาพันธ์"},
-            { value:3, label:"มีนาคม"},
-            { value:4, label:"เมษายน"},
-            { value:5, label:"พฤษภาคม"},
-            { value:6, label:"มิถุนายน"},
-            { value:7, label:"กรกฏาคม"},
-            { value:8, label:"สิงหาคม"},
-            { value:9, label:"กันยายน"},
-            { value:10, label:"ตุลาคม"},
-            { value:11, label:"พฤศจิกายน"},
-            { value:12, label:"ธันวาคม"},
+            { value: 1, label: "มกราคม" },
+            { value: 2, label: "กุมภาพันธ์" },
+            { value: 3, label: "มีนาคม" },
+            { value: 4, label: "เมษายน" },
+            { value: 5, label: "พฤษภาคม" },
+            { value: 6, label: "มิถุนายน" },
+            { value: 7, label: "กรกฏาคม" },
+            { value: 8, label: "สิงหาคม" },
+            { value: 9, label: "กันยายน" },
+            { value: 10, label: "ตุลาคม" },
+            { value: 11, label: "พฤศจิกายน" },
+            { value: 12, label: "ธันวาคม" },
         ]
         return arr;
     });
-    const [billSales,setBillSales] = useState([]);
+    const [billSales, setBillSales] = useState([]);
     const [currentBillSale, setCurrentBillSale] = useState({});
     const [billSaleDetails, setBillSaleDetails] = useState([]);
 
     useEffect(() => {
         handleShowReport()
-    },[]);
+    }, []);
 
     const handleShowReport = async () => {
         try {
             const path = `${config.api_path}/billsale/listByYearAndMonth?year=${currentYear}&month=${currentMonth}`
-            console.log(path)
-            const response = await axios.get(path,config.headers())
-            console.log(response)
+            const response = await axios.get(path, config.headers())
+            if (response.status === 200) {
+                console.log(response)
+                // console.log(response.data.results)
+                setBillSales(response.data.results)
+            }
         } catch (error) {
             console.log(error.message);
         }
@@ -69,8 +73,8 @@ export default function BillSaleSumPerDay() {
                                 <div className="input-group">
                                     <span className='input-group-text'>ปี </span>
                                     <select value={currentYear} className='form-control' onChange={e => setCurrentYear(e.target.value)}>
-                                        { arrayYear.map((item,index) => (
-                                             <option key={index} value={item}>{item}</option>
+                                        {arrayYear.map((item, index) => (
+                                            <option key={index} value={item}>{item}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -78,9 +82,9 @@ export default function BillSaleSumPerDay() {
                             <div className="col-sm-3">
                                 <div className="input-group">
                                     <span className='input-group-text'>เดือน</span>
-                                    <select value={currentMonth} className='form-control'  onChange={e=> setCurrentMonth(e.target.value)}>
-                                        { arrayMonth.map((item,index) => (
-                                             <option key={index} value={item.value}>{item.label}</option>
+                                    <select value={currentMonth} className='form-control' onChange={e => setCurrentMonth(e.target.value)}>
+                                        {arrayMonth.map((item, index) => (
+                                            <option key={index} value={item.value}>{item.label}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -92,8 +96,64 @@ export default function BillSaleSumPerDay() {
                                 </button>
                             </div>
                         </div>
+                        <div className="row mt-3">
+                            <div className='table-responsive-sm'>
+                                <table className='mt-2 table table-bordered table-hover table-sm text-nowrap'>
+                                    <thead>
+                                        <tr>
+                                            <th width={150}></th>
+                                            <th scope="col" width={100} className='text-end'>วันที่</th>
+                                            <th scope='col' width={100} className='text-end'>ยอดขาย</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {billSales !== undefined && billSales.length > 0 ? (
+                                            <>
+                                                {billSales.map((billItem, index) => (
+                                                    <React.Fragment key={index}>
+                                                        <tr>
+                                                            <td>
+                                                                <button className='btn btn-primary me-2 w-100' onClick={e => setCurrentBillSale(billItem.results)} data-toggle="modal" data-target="#modalBillSaleDetail"  >
+                                                                    <i className='fa fa-file-alt me-2'></i> รายละเอียด
+                                                                </button>
+                                                            </td>
+                                                            <td className='text-end'>{billItem.day}</td>
+                                                            <td className='text-end'>{parseInt(billItem.sum).toLocaleString('th-TH')}</td>
+
+                                                        </tr>
+                                                    </React.Fragment>
+                                                ))}
+                                                <tr>
+                                                    <td colSpan={3} className='text-end'>
+                                                        ยอดขายรวม <b className='text-success'> {billSales.reduce((total, billItem) => total + billItem.sum, 0).toLocaleString('th')} </b>
+                                                    </td>
+                                                </tr>
+                                            </>
+                                        ) : (
+                                            <tr><td colSpan={6}>ไม่มีข้อมูล</td></tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <Modal id="modalBillSaleDetail" title="รายการขาย" modalSize="modal-lg"  >
+                    <div className='mt-2 table-responsive-sm'>
+                        <table className='mt-2 table table-bordered table-hover table-sm text-nowrap'>
+                            <thead>
+                                <tr className='text-center'>
+                                    <th>เลขบิล</th>
+                                    <th className='text-end'>วันที่</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+
+                            </tbody>
+                        </table>
+                    </div>
+                </Modal>
             </Template>
         </div>
     )

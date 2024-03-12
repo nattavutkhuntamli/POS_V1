@@ -110,8 +110,8 @@ Router.get('/listByYearAndMonth',Service.isLogin, async(req,res) => {
             year:req.query.year,
             month:req.query.month
         }
-        const results = await BillSaleController.ListByYearAndMonth(payload);
-        return res.status(200).json(results)
+        const results = await BillSaleController.SearchByYearAndMonth(payload)
+       return res.status(200).json(results)
      
     } catch (error) {
         return res.status(error.statusCode || 500).json({
