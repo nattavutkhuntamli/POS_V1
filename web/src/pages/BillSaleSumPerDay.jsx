@@ -166,30 +166,14 @@ export default function BillSaleSumPerDay() {
                                             </tr>
                                         </React.Fragment>
                                     )
-                                    ) : null}
-                                {/* {currentBillSale.length > 0 && currentBillSale !== undefined ?
-                                    currentBillSale.map((billItem, index) => (
-                                        billItem.billSaleDetails.map((billItemDetails, index) => {
-                                            return (
-                                                 <React.Fragment key={index}>
-                                                    <tr>
-                                                       <td> {billItemDetails.billSaleId}</td>
-                                                       <td> </td>
-                                                    </tr>
-                                                </React.Fragment>
-                                            );
-                                        })
-                                    ))
-                                    : null
-                                } */}
-
+                                    ) : <tr><td colSpan={4} className='text-center'>ไม่มีข้อมูลรายการขาย</td></tr>}
                             </tbody>
                         </table>
                     </div>
                 </Modal>
 
                 <Modal id="modalBillSaleDetailItem" title="รายละเอียดบิลการขาย" modalSize="modal-lg">
-                    {console.log(billSaleDetails)}
+                    
                     <div className='mt-2 table-responsive-sm'>
                         <table className='mt-2 table table-bordered table-hover table-sm text-nowrap'>
                             <thead>
