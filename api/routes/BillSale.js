@@ -103,6 +103,23 @@ Router.get('/todayBill', Service.isLogin, async(req,res) => {
     }
 })
 
+Router.get('/listByYearAndMonth',Service.isLogin, async(req,res) => {
+    try {
+        const payload = {
+            userId:req.member,
+            year:req.query.year,
+            month:req.query.month
+        }
+        const results = await BillSaleController.ListByYearAndMonth(payload);
+        return res.status(200).json(results)
+     
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message ||'server error'
+        })
+    }
+})
+
 Router.post('/sale', Service.isLogin, async(req,res) => { 
     try {
         const payload = {

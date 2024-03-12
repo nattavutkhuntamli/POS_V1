@@ -258,6 +258,39 @@ module.exports = {
       throw { statusCode: 400, message: error.message };
     }
   },
+  listByYearAndMonth: async(payload) =>{
+    try {
+      let arr = [];
+      let y = payload.year;
+      let m = payload.month;
+      let daysInMonth = new Date(y,m,0).getDate()
+      const Op = Sequelize.Op;
+       
+      BillSaleModels.hasMany(BillSaleDetailModels)
+      BillSaleDetailModels.belongsTo(ProductModels)
+
+      for(let i =1; i<= daysInMonth; i++) {
+        const results = await BillSaleModels.findAll({
+          where:{
+            [Op.and]:[
+              Sequelize.fn('EXTRACT(YEAR FROM "billSaleDetails"."payData") = ', y),
+              Sequelize.fn('EXTRACT(MONTH FROM "billSaleDetails"."payData") = ', m),
+              Sequelize.fn('EXTRACT(DAY FROM "billSaleDetails"."payData") = ', i),
+            ]
+          },
+          include:{
+            model:BillSaleDetailModels,
+            include:{
+              model:ProductModels
+            }
+          }
+        });
+        
+      }
+    } catch (error) {
+      
+    }
+  },
   UpdateQty: async (item) => {
     try {
       console.log(item.id);
