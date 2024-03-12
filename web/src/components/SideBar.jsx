@@ -237,7 +237,7 @@ function SideBar() {
 
                             <li className="nav-header">รายงาน</li>
                             <li className="nav-item">
-                                <Link to='/sss' className={location.pathname === '/ss' ? 'nav-link active' : 'nav-link'}>
+                                <Link to='/billsalesumperday' className={location.pathname === '/billsalesumperday' ? 'nav-link active' : 'nav-link'}>
                                     <i className="nav-icon fas fa-file-alt "></i>
                                     <p className="text">  ยอดขายรายวัน</p>
                                 </Link>
