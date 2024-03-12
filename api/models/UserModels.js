@@ -23,8 +23,6 @@ const UserModels = conn.define('user', {
     userId:{
       type: DataTypes.BIGINT,
     }
-},{
-    timestamps: false,
 })
 
 UserModels.sync({ alert: true })

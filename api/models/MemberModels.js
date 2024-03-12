@@ -23,8 +23,6 @@ const MemberModels = client.define('member',{
     pass:{
         type: DataTypes.STRING,
     }
-},{
-    timestamps: false,
 });
 
 MemberModels.sync({ alert: true });

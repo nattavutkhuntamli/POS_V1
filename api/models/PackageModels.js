@@ -20,8 +20,6 @@ const PackageModels = client.define('package',{
         type: DataTypes.BIGINT,
         allowNull: true
     }
-},{
-    timestamps: false,
 });
 
 PackageModels.sync({ alert: true });

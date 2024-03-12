@@ -25,8 +25,6 @@ const ProductModels = client.define('product',{
     userId:{
         type: DataTypes.BIGINT,
     }
-},{
-    timestamps: false,
 })
 ProductModels.sync({alter: true})
 
