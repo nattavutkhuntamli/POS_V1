@@ -9,7 +9,8 @@ import Product from './pages/Product.jsx';
 import User from './pages/User.jsx';
 import Sale from './pages/Sale.jsx';
 import BillSales from './pages/BillSales.jsx';
-// import BillSaleSumPerDay from './pages/BillSaleSumPerDay.jsx';
+import BillSaleSumPerDay from './pages/BillSaleSumPerDay.jsx';
+
 const ProtectedRoute = ({ element: Element, ...rest }) => {
   const isLoginMember = localStorage.getItem('isLoginMember');
   if (isLoginMember === null) {
@@ -54,10 +55,10 @@ const router = createBrowserRouter([
     path: "/billsale",
     element: <ProtectedRoute element={BillSales} />
   },
-  // {
-  //   path: "/billsalesumperday",
-  //   element: <ProtectedRoute element={BillSaleSumPerDay} />
-  // },
+  {
+    path: "/billsalesumperday",
+    element: <ProtectedRoute element={BillSaleSumPerDay} />
+  },
   
 ]);
 

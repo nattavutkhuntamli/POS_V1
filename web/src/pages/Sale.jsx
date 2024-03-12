@@ -393,18 +393,30 @@ export default function Sale() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {LastBill.billSaleDetails != undefined ? LastBill.billSaleDetails.map(
-                                    (item, index) => (
-                                        <tr key={index}>
-                                            <td className='text-center'>{index + 1}</td>
-                                            <td>{item.product.barcode}</td>
-                                            <td >{item.product.name}</td>
-                                            <td className='text-end'>{parseInt(item.price).toLocaleString('th')}</td>
-                                            <td className='text-end'> {item.qty}</td>
-                                            <td className='text-end'>{parseInt(item.price * item.qty).toLocaleString('th')}</td>
-                                        </tr>
-                                    )
-                                ) : <tr className='text-center'><td colSpan={6}>ไม่มีข้อมูล</td></tr>}
+                                {LastBill.billSaleDetails !== undefined && LastBill.billSaleDetails .length > 0 ? (
+                                        <>
+                                            {LastBill.billSaleDetails.map((item, index) => (
+                                                <React.Fragment key={index}>
+                                                    <tr>
+                                                        <td className='text-center'>{index + 1}</td>
+                                                        <td>{item.product.barcode}</td>
+                                                        <td >{item.product.name}</td>
+                                                        <td className='text-end'>{parseInt(item.price).toLocaleString('th')}</td>
+                                                        <td className='text-end'> {item.qty}</td>
+                                                        <td className='text-end'>{parseInt(item.price * item.qty).toLocaleString('th')}</td>
+                                                    </tr>
+                                                </React.Fragment>
+                                            ))}
+                                            <tr>
+                                                <td colSpan={5} className='text-end'>ยอดขายรวม</td>
+                                                <td className='text-end'>
+                                                    {LastBill.billSaleDetails.reduce((total, billItem) => total + billItem.price * billItem.qty, 0).toLocaleString('th')}
+                                                </td>
+                                            </tr>
+                                        </>
+                                    ) : (
+                                        <tr><td colSpan={6}>ไม่มีข้อมูล</td></tr>
+                                    )}
                             </tbody>
                         </table>
                     </div>
