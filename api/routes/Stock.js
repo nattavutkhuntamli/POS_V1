@@ -15,4 +15,35 @@ Router.get('/list',Service.isLogin, async(req, res) => {
   }
 })
 
+Router.post('/save', Service.isLogin, async(req, res) => {
+  try {
+    const payload = {
+      userId:req.member,
+      productId:req.body.productId,
+      qty:parseInt(req.body.qty)
+    }
+    const results = await StockController.SavePrd(payload);
+    return res.status(200).json(results)
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+      message: error.message || 'Server error'
+    })
+  }
+})
+
+Router.delete('/destroy/:id', Service.isLogin, async(req, res) => {
+  try{
+     const payload = {
+        userId:req.member,
+        id:req.params.id
+     }
+     const results = await StockController.destroyItem(payload);
+     return res.status(200).json(results)
+  }catch (error) {
+    return res.status(error.statusCode || 500).json({
+      message: error.message || 'Server error'
+    })
+  }
+})
+
 module.exports = Router;

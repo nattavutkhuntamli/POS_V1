@@ -251,10 +251,10 @@ function SideBar() {
 
                             </li>
                             <li className="nav-item">
-                                <a onClick={handleProfile} className="nav-link" style={{ cursor: "pointer" }} data-bs-toggle="modal" data-bs-target="#modalEditProfile" tabIndex="-1" >
+                                <Link to='/stock' className={location.pathname === '/stock' ? 'nav-link active' : 'nav-link'}>
                                     <i className="nav-icon fas fa-home"></i>
                                     <p className="text">  รับสินค้าเข้า Stock</p>
-                                </a>
+                                </Link>
                             </li>
 
                             <li className="nav-header">ตั้งค่า</li>

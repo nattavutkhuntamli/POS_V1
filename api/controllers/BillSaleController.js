@@ -280,7 +280,9 @@ module.exports = {
               Sequelize.fn('EXTRACT(YEAR FROM "billSaleDetails"."createdAt") = ', y),
               Sequelize.fn('EXTRACT(MONTH FROM "billSaleDetails"."createdAt") = ', m),
               Sequelize.fn('EXTRACT(DAY FROM "billSaleDetails"."createdAt") = ', i),
-            ]
+             
+            ],
+             userId:payload.userId
           },
           include:{
             model:BillSaleDetailModels,

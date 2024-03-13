@@ -10,7 +10,7 @@ import User from './pages/User.jsx';
 import Sale from './pages/Sale.jsx';
 import BillSales from './pages/BillSales.jsx';
 import BillSaleSumPerDay from './pages/BillSaleSumPerDay.jsx';
-
+import Stock from './pages/Stock.jsx';
 const ProtectedRoute = ({ element: Element, ...rest }) => {
   const isLoginMember = localStorage.getItem('isLoginMember');
   if (isLoginMember === null) {
@@ -59,7 +59,10 @@ const router = createBrowserRouter([
     path: "/billsalesumperday",
     element: <ProtectedRoute element={BillSaleSumPerDay} />
   },
-  
+  {
+    path: "/stock",
+    element: <ProtectedRoute element={Stock} />
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
