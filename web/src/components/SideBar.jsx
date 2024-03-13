@@ -239,17 +239,25 @@ function SideBar() {
                             <li className="nav-item">
                                 <Link to='/billsalesumperday' className={location.pathname === '/billsalesumperday' ? 'nav-link active' : 'nav-link'}>
                                     <i className="nav-icon fas fa-file-alt "></i>
-                                    <p className="text">  ยอดขายรายวัน</p>
+                                    <p className="text">  รายงานยอดขายรายวัน</p>
                                 </Link>
                             </li>
 
                             <li className="nav-item">
                                 <Link to='/billsale' className={location.pathname === '/billsale' ? 'nav-link active' : 'nav-link'}>
                                     <i className="nav-icon fas fa-list-alt"></i>
-                                    <p className="text">  บิลขาย</p>
+                                    <p className="text">  รายงานบิลขาย</p>
                                 </Link>
 
                             </li>
+                            <li className="nav-item">
+                                <Link to='/reportstock' className={location.pathname === '/reportstock' ? 'nav-link active' : 'nav-link'}>
+                                    <i className="nav-icon fas fa-list-alt"></i>
+                                    <p className="text">  รายงานสต๊อกสินค้า</p>
+                                </Link>
+
+                            </li>
+                            
                             <li className="nav-item">
                                 <Link to='/stock' className={location.pathname === '/stock' ? 'nav-link active' : 'nav-link'}>
                                     <i className="nav-icon fas fa-home"></i>

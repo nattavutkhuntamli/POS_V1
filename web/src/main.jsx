@@ -11,6 +11,7 @@ import Sale from './pages/Sale.jsx';
 import BillSales from './pages/BillSales.jsx';
 import BillSaleSumPerDay from './pages/BillSaleSumPerDay.jsx';
 import Stock from './pages/Stock.jsx';
+import ReportStock from './pages/ReportStock.jsx';
 const ProtectedRoute = ({ element: Element, ...rest }) => {
   const isLoginMember = localStorage.getItem('isLoginMember');
   if (isLoginMember === null) {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
   {
     path: "/stock",
     element: <ProtectedRoute element={Stock} />
+  },
+  {
+    path: "/reportstock",
+    element: <ProtectedRoute element={ReportStock} />
   },
 ]);
 
