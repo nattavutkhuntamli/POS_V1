@@ -1,5 +1,8 @@
 const StockModels = require('../models/StockModels')
-const ProductModels = require('../models/ProductModels')
+const ProductModels = require("../models/ProductModels");
+const BillSaleDetailModels = require("../models/BillSaleDetailModels");
+
+
 module.exports = {
     list: async(payload) => {
         try {
@@ -29,6 +32,74 @@ module.exports = {
         } catch (error) {
             throw { statusCode: error.statusCode || 400, message: error.message}
         }
+    },
+    ReportStock:async(payload) => {
+      try {
+        ProductModels.hasMany(StockModels)
+        ProductModels.hasMany(BillSaleDetailModels)
+
+        StockModels.belongsTo(ProductModels)
+        BillSaleDetailModels.belongsTo(ProductModels)
+
+        let arr  =[];
+
+        const results = await ProductModels.findAll({
+           
+            include: [
+                {
+                    model: StockModels,
+                    include:{
+                        model:ProductModels
+                    }
+                },
+                {
+                    model: BillSaleDetailModels,
+                    include:{
+                        model:ProductModels
+                    }
+                }
+            ],
+
+            where: {
+                userId: payload.userId
+            },
+         
+        })
+        // return results;
+        for(let i = 0; i < results.length; i++) {
+            const result = results[i]
+            const stocks = result.stocks
+            const BillSaleDetail = result.billSaleDetails;
+            let stockIn  = 0;
+            let stockOut = 0;
+
+            for(let j = 0; j < stocks.length; j++) { 
+              const item = stocks[j]
+              stockIn += parseInt(item.qty)
+            }
+
+            for(let j = 0; j <  BillSaleDetail.length; j++) {
+                const item = BillSaleDetail[j]
+                stockOut += parseInt(item.qty)
+            }
+
+            arr.push(
+                {
+                    result:result,
+                    stockIn:stockIn,
+                    stockOut:stockOut
+                }
+            )
+        }
+        if(arr.length > 0 ) {
+            return { statusCode:200, results:arr};
+        }else{
+            throw { statusCode: 404, message: "ไม่พบข้อมูลสินค้า" }
+        }
+      } catch (error) {
+        throw { statusCode: error.statusCode || 400, message: error.message}
+        
+      }
     },
     SavePrd: async(payload) => {
         try {

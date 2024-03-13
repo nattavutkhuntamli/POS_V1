@@ -15,6 +15,17 @@ Router.get('/list',Service.isLogin, async(req, res) => {
   }
 })
 
+Router.get('/report',Service.isLogin, async(req,res) => {
+  try {
+      const results = await StockController.ReportStock({userId:req.member})
+      return res.status(200).json(results)
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+      message: error.message || 'Server error'
+    })
+  }
+})
+
 Router.post('/save', Service.isLogin, async(req, res) => {
   try {
     const payload = {
