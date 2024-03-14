@@ -182,6 +182,19 @@ function SideBar() {
             console.log(error)
         }
     }
+    const renderButton = (item) => {
+        if (packageName == item.name) {
+            console.log('ee')
+
+            return (
+                <button type="button" className='btn btn-primary w-100 rounded ' data-bs-toggle="modal" data-bs-target="#modalRegister" tabIndex={item.id} disabled > <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
+            )
+        } else {
+            return (
+                <button type="button" className='btn btn-primary w-100 rounded  ' data-bs-toggle="modal" data-bs-target="#modalRegister" tabIndex={item.id}> <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
+            )
+        }
+    }
     return (
         <div>
             <aside className="main-sidebar elevation-4 sidebar-light-olive">
@@ -195,7 +208,7 @@ function SideBar() {
                         <div className="image">
                             <img src="../../dist/img/user2-160x160.jpg" className="img-circle elevation-2" alt="User Image" />
                         </div>
-                        <div className="info ">
+                        <div className="info d-grid">
                             <div>
                                 {membername}
                             </div>
@@ -205,7 +218,12 @@ function SideBar() {
                             <div className='d-grid gap-0 d-md-block'>
                                 <button type="button" className='btn btn-warning mt-2 w-100' data-bs-toggle="modal" data-bs-target="#modalUpgrad" tabIndex="-1" onClick={fetchPackage} > <i className='fa fa-arrow-up me-2'></i><b>Upgrade</b></button>
                             </div>
+                           
+                            <div className="progress mt-3" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                <div className="progress-bar" style={ {"width":"25%"}}>25%</div>
+                            </div>    
                         </div>
+                        
                     </div>
 
 
@@ -358,7 +376,9 @@ function SideBar() {
                                         <div className='h5'> <strong className='text-primary'> ราคา {parseInt(item.price).toLocaleString('th-TH')} &nbsp; ./เดือน </strong></div>
                                         <div className='  '>จำนวนบิล <strong className='text-danger'> {parseInt(item.bill_amount).toLocaleString('th-TH')}</strong> ต่อบิล</div>
                                         <div className='mt-3 text-center'>
-                                            <button type="button" onClick={(e) => chosenPackage(item)} className='btn btn-primary w-100 rounded ' data-bs-toggle="modal" data-bs-target="#modalRegister" tabIndex={item.id}> <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
+                                            {/* <button type="button" onClick={(e) => chosenPackage(item)} className='btn btn-primary w-100 rounded ' data-bs-toggle="modal" data-bs-target="#modalRegister" tabIndex={item.id}> <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
+                                             */}
+                                            {renderButton(item)}
                                         </div>
                                     </div>
                                 </div>
