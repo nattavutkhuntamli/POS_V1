@@ -172,7 +172,8 @@ export default function Stock() {
                         <th>รายการ</th>
                         <th className='text-center'>ราคาสินค้า</th>
                         <th className='text-center'>ราคาต้นทุ่น</th>
-                        <th className='text-center'>จำนวสินค้า</th>
+                        <th className='text-center'>จำนวนสินค้า</th>
+                        <th className='text-center'>วันที่เพิ่มจำนวนสินค้า</th>
                         <th className='text-center'>จัดการข้อมูล</th>
                     </tr>
                 </thead>
@@ -186,6 +187,7 @@ export default function Stock() {
                                 <td className='text-center'>{parseInt(stocksItem.product.price).toLocaleString('th-TH')}</td>
                                 <td className='text-center'>{parseInt(stocksItem.product.cost).toLocaleString('th-TH')}</td>
                                 <td className='text-center'>{parseInt(stocksItem.qty).toLocaleString('th-TH')}</td>
+                                <td className='text-center'> {new Date(stocksItem.createdAt).toLocaleString('th-TH')}</td>
                                 <td className='text-center'>
                                     <button className='btn btn-danger me-2' onClick={e =>handleDelete(stocksItem)}>
                                         <i className="fa fa-trash "></i>
@@ -207,6 +209,7 @@ export default function Stock() {
                     <th width={180}></th>
                     <th>Barcode</th>
                     <th>รายการ</th>
+
                 </tr>
             </thead>
             <tbody>
