@@ -11,7 +11,8 @@ function SideBar() {
     const [membername, setMembername] = useState(null);
     const [packageName, setPackageName] = useState(null);
     const [editMembername, setEditMembername] = useState();
-    const [editPassword, setEditPassword] = useState(null)
+    const [editPassword, setEditPassword] = useState(null);
+    const [packages, setpackages] = useState([]);
     useEffect(() => {
         fetchData()
     }, [])
@@ -34,7 +35,7 @@ function SideBar() {
                 localStorage.removeItem('isLoginMember')
                 localStorage.removeItem('pos_token')
                 window.location.href = "/login"
-            }else{
+            } else {
                 console.log('eeeeeee')
             }
         }
@@ -77,15 +78,15 @@ function SideBar() {
                 text: 'ยืนยันการแก้ไขข้อมูลร้านค้า',
                 confirmButtonColor: '#3085d6',
                 showDenyButton: true,
-            }).then(async(res) => {
+            }).then(async (res) => {
                 if (res.isConfirmed) {
                     const data = {
                         name: editMembername
                     }
-                    const response =  await axios.put(`${config.api_path}member/editProfile/${memberId}`, data, config.headers())
+                    const response = await axios.put(`${config.api_path}member/editProfile/${memberId}`, data, config.headers())
                     if (response.status === 200) {
                         Swal.fire({
-                            icon:'success',
+                            icon: 'success',
                             title: response.data.message,
                             text: response.data.message,
                         }).then(() => {
@@ -119,7 +120,7 @@ function SideBar() {
         }
     }
 
-    const handleupdatePass = async(e) => {
+    const handleupdatePass = async (e) => {
         e.preventDefault();
         try {
             Swal.fire({
@@ -128,15 +129,15 @@ function SideBar() {
                 text: 'ยืนยันการแก้ไขรหัสผ่าน',
                 confirmButtonColor: '#3085d6',
                 showDenyButton: true,
-            }).then(async(res) => {
-                if(res.isConfirmed){
+            }).then(async (res) => {
+                if (res.isConfirmed) {
                     const data = {
                         pass: editPassword
                     }
-                    const response =  await axios.put(`${config.api_path}member/editPass/${memberId}`, data, config.headers())
+                    const response = await axios.put(`${config.api_path}member/editPass/${memberId}`, data, config.headers())
                     if (response.status === 200) {
                         Swal.fire({
-                            icon:'success',
+                            icon: 'success',
                             title: response.data.message,
                             text: response.data.message,
                         }).then(() => {
@@ -153,7 +154,7 @@ function SideBar() {
                             text: 'กรุ��า��องใหม่อีกครั้ง',
                         })
                     }
-                }else{
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'ยกเลิก',
@@ -170,12 +171,23 @@ function SideBar() {
             })
         }
     }
+
+    const fetchPackage = async () => {
+        try {
+            const response = await axios.get(`${config.api_path}package/list`)
+            if (response.status === 200) {
+                setpackages(response.data.body)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <div>
             <aside className="main-sidebar elevation-4 sidebar-light-olive">
                 <a href="../../index3.html" className="brand-link">
                     <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" className="brand-image img-circle elevation-3" style={{ opacity: '0.8' }} />
-                    <span className="brand-text font-weight-light">POS ON CLOUD</span>
+                    <span className="brand-text font-weight-light">{membername}</span>
                 </a>
 
                 <div className="sidebar">
@@ -183,12 +195,15 @@ function SideBar() {
                         <div className="image">
                             <img src="../../dist/img/user2-160x160.jpg" className="img-circle elevation-2" alt="User Image" />
                         </div>
-                        <div className="info">
+                        <div className="info ">
                             <div>
-                                <a href="#" className="d-block">{membername} </a>
+                                {membername}
                             </div>
                             <div>
-                                <a href="#" className="d-block">Package: {packageName}</a>
+                                Package: {packageName}
+                            </div>
+                            <div className='d-grid gap-0 d-md-block'>
+                                <button type="button" className='btn btn-warning mt-2 w-100' data-bs-toggle="modal" data-bs-target="#modalUpgrad" tabIndex="-1" onClick={fetchPackage} > <i className='fa fa-arrow-up me-2'></i><b>Upgrade</b></button>
                             </div>
                         </div>
                     </div>
@@ -197,7 +212,7 @@ function SideBar() {
 
                     <nav className="mt-2">
                         <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li className="nav-header">เมนู</li>
+                            <li className="nav-header">เมนู</li>
 
                             <li className="nav-item">
                                 <Link to='/home' className={location.pathname === '/home' ? 'nav-link active' : 'nav-link'}>
@@ -210,7 +225,7 @@ function SideBar() {
 
                             <li className="nav-item">
                                 <Link to='/sale' className={location.pathname === '/sale' ? 'nav-link active' : 'nav-link'}>
-                                  <i className="nav-icon fa-regular fa-dollar-sign"></i>
+                                    <i className="nav-icon fa-regular fa-dollar-sign"></i>
                                     <p>
                                         ขายสินค้า
                                     </p>
@@ -257,7 +272,7 @@ function SideBar() {
                                 </Link>
 
                             </li>
-                            
+
                             <li className="nav-item">
                                 <Link to='/stock' className={location.pathname === '/stock' ? 'nav-link active' : 'nav-link'}>
                                     <i className="nav-icon fas fa-home"></i>
@@ -329,6 +344,29 @@ function SideBar() {
                         <button className="btn btn-primary w-100" type="submit"><i className='fa fa-arrow-right me-2'></i> แก้ไขรหัสผ่าน</button> &nbsp;
                     </div>
                 </form>
+            </Modal>
+
+            <Modal id="modalUpgrad" title="เลือกแพ็คเกจที่ต้องการ" modalSize="modal-lg">
+                {console.log(packages)}
+                <div className="row">
+                    {packages.length > 0 ? packages.map((item, index) => (
+                        <React.Fragment key={index}>
+                            <div className="col-sm-4">
+                                <div className="card border-primary  mb-3 h-100">
+                                    <div className="card-body">
+                                        <div className='h4 text-success'>{item.name}</div>
+                                        <div className='h5'> <strong className='text-primary'> ราคา {parseInt(item.price).toLocaleString('th-TH')} &nbsp; ./เดือน </strong></div>
+                                        <div className='  '>จำนวนบิล <strong className='text-danger'> {parseInt(item.bill_amount).toLocaleString('th-TH')}</strong> ต่อบิล</div>
+                                        <div className='mt-3 text-center'>
+                                            <button type="button" onClick={(e) => chosenPackage(item)} className='btn btn-primary w-100 rounded ' data-bs-toggle="modal" data-bs-target="#modalRegister" tabIndex={item.id}> <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </React.Fragment>
+                    )) : null}
+                </div>
             </Modal>
         </div>
     )
