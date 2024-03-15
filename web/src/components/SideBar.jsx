@@ -14,7 +14,8 @@ function SideBar() {
     const [editPassword, setEditPassword] = useState(null);
     const [packages, setpackages] = useState([]);
     const [totalBills, setTotalBills] = useState(0);
-    const [billAmount, setBillAmount] = useState(0)
+    const [billAmount, setBillAmount] = useState(0);
+    const [banks,setBanks] = useState([]);
     useEffect(() => {
         fetchData()
         fetchDatatotalbill()
@@ -55,6 +56,18 @@ function SideBar() {
                 title: 'Error',
                 text: `${error.response.data.message}`,
             })
+        }
+    }
+
+    const fetchDatabank = async() => {
+        try {
+            const response = await axios.get(`${config.api_path}bank/listbank`,config.headers());
+            console.log(response)
+            if(response.status === 200) {
+                setBanks(response.data.body)
+            }
+        } catch (error) {
+            console.log(error.message)
         }
     }
     const handleLogout = () => {
@@ -202,11 +215,11 @@ function SideBar() {
     const renderButton = (item) => {
         if (packageName == item.name) {
             return (
-                <button type="button" className='btn btn-primary w-100 rounded ' data-bs-toggle="modal" data-bs-target="#modalRegister" tabIndex={item.id} disabled > <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
+                <button type="button" className='btn btn-primary w-100 rounded ' data-bs-toggle="modal" data-bs-target="#modalBank" tabIndex={item.id} disabled > <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
             )
         } else {
             return (
-                <button type="button" className='btn btn-primary w-100 rounded  ' data-bs-toggle="modal" data-bs-target="#modalRegister" tabIndex={item.id}> <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
+                <button type="button" className='btn btn-primary w-100 rounded  ' onClick={fetchDatabank} data-bs-toggle="modal" data-bs-target="#modalBank" tabIndex={item.id}> <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
             )
         }
     }
@@ -410,6 +423,34 @@ function SideBar() {
 
                         </React.Fragment>
                     )) : null}
+                </div>
+            </Modal>
+            <Modal id="modalBank" title ="ช่องทางการชำระเงิน" modalSize="modal-lg">
+                <div className='table-response-sm mt-3'>
+                    <table className=' table table-bordered table-striped'>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>ธนาคาร</th>
+                                <th>เลขบัญชี</th>
+                                <th>เจ้าของบัญชี</th>
+                                <th>สาขา</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {banks.length > 0 ? banks.map((item,index) => (
+                                <React.Fragment key={index}>
+                                    <tr>
+                                        <td>{index + 1}</td>
+                                        <td>{item.bankType}</td>
+                                        <td>{item.bankCode}</td>
+                                        <td>{item.bankName}</td>
+                                        <td>{item.bankBranch}</td>
+                                    </tr>
+                                </React.Fragment>
+                            )) : <tr><td colSpan={3}>ไม่มีข้อมูล</td></tr>}
+                        </tbody>
+                    </table>
                 </div>
             </Modal>
         </div>
