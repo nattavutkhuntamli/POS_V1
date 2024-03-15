@@ -323,14 +323,7 @@ function SideBar() {
                         <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <li className="nav-header">เมนู</li>
 
-                            <li className="nav-item">
-                                <Link to='/home' className={location.pathname === '/home' ? 'nav-link active' : 'nav-link'}>
-                                    <i className="nav-icon fas fa-tachometer-alt"></i>
-                                    <p>
-                                        หน้าแรก
-                                    </p>
-                                </Link>
-                            </li>
+                           
 
                             <li className="nav-item">
                                 <Link to='/sale' className={location.pathname === '/sale' ? 'nav-link active' : 'nav-link'}>
