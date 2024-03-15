@@ -210,10 +210,48 @@ function SideBar() {
     }
     const handleChangePackage = async() => {
         try {
-            
+            Swal.fire({
+                icon: 'question',
+                title: 'ยืนยันการเลือก',
+                text: 'ยืนยันการเลือกแพ็กเกจนี้',
+                confirmButtonColor: '#3085d6',
+                showDenyButton: true,
+            }).then( async(isCf) => {
+                if(isCf.isConfirmed){
+                    const res = await axios.get(`${config.api_path}package/changePackage/${choosePackage.id}`,config.headers())
+                    if(res.status === 200) {
+                        Swal.fire({
+                            icon:'success',
+                            title: res.data.message,
+                            text: res.data.message,
+                        })
+                        const btns  = document.getElementsByClassName('btnClose');
+                        for(let i = 0; i < btns.length; i++){
+                            btns[i].click();
+                        }
+                    }
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ยกเลิก',
+                        text: 'ยกเลิกการเลือกแพ็กเกจนี้',
+                    })
+                }
+            }).catch( err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ไม่สำเร็จ',
+                    text: err.response.data.message,
+                })
+            })
         } catch (error) {
-            console.log(error)
+            Swal.fire({
+                icon: 'error',
+                title: 'ไม่สำเร็จ',
+                text: error.response.data.message,
+            })
         }
+        
     }
     const fetchPackage = async () => {
         try {

@@ -23,6 +23,21 @@ router.get('/countTotalUse', Servie.isLogin, async(req,res) => {
     } catch (error) {
         return res.status(error.statusCode || 500).json({
             message: error.message ||'server error'
+        });
+    }
+})
+
+router.get('/changePackage/:id', Servie.isLogin, async(req,res) => {
+    try {
+        const payload = {
+            userId:req.member,
+            packageId:req.params.id
+        } 
+        const results = await PackageControle.changePackage(payload)
+        return res.status(200).json(results)
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message ||'server error'
         })
     }
 })

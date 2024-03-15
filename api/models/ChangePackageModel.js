@@ -14,6 +14,11 @@ const ChangePackageModel = client.define('changepackage',{
     userId:{
         type:DataTypes.BIGINT,
     },
+    status:{
+        type:DataTypes.STRING,
+        defaultValue: 'wait',
+        allowNull:false
+    }
 })
 
 ChangePackageModel.sync({alter: true})

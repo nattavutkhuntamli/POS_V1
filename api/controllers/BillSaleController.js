@@ -324,6 +324,7 @@ module.exports = {
         results: arr
       }
     } catch (error) {
+      throw { statusCode: 400, message: error.message };
       
     }
   },
