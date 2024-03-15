@@ -16,6 +16,7 @@ function SideBar() {
     const [totalBills, setTotalBills] = useState(0);
     const [billAmount, setBillAmount] = useState(0);
     const [banks,setBanks] = useState([]);
+    const [choosePackage, setChoosePackage] = useState({});
     useEffect(() => {
         fetchData()
         fetchDatatotalbill()
@@ -61,10 +62,11 @@ function SideBar() {
 
     const fetchDatabank = async() => {
         try {
-            const response = await axios.get(`${config.api_path}bank/listbank`,config.headers());
-            console.log(response)
-            if(response.status === 200) {
-                setBanks(response.data.body)
+            if(banks.length == 0) {
+                const response = await axios.get(`${config.api_path}bank/listbank`,config.headers());
+                if(response.status === 200) {
+                    setBanks(response.data.body)
+                }
             }
         } catch (error) {
             console.log(error.message)
@@ -202,6 +204,17 @@ function SideBar() {
         }
     }
 
+    const handleChoosePackage = (item) => {
+        setChoosePackage(item)
+        fetchDatabank()
+    }
+    const handleChangePackage = async() => {
+        try {
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const fetchPackage = async () => {
         try {
             const response = await axios.get(`${config.api_path}package/list`)
@@ -219,7 +232,7 @@ function SideBar() {
             )
         } else {
             return (
-                <button type="button" className='btn btn-primary w-100 rounded  ' onClick={fetchDatabank} data-bs-toggle="modal" data-bs-target="#modalBank" tabIndex={item.id}> <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
+                <button type="button" className='btn btn-primary w-100 rounded  ' onClick={e => handleChoosePackage(item)}  data-bs-toggle="modal" data-bs-target="#modalBank" tabIndex={item.id}> <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
             )
         }
     }
@@ -426,6 +439,12 @@ function SideBar() {
                 </div>
             </Modal>
             <Modal id="modalBank" title ="ช่องทางการชำระเงิน" modalSize="modal-lg">
+                <div className='h4 text-secondary'>
+                    Package ที่เลือกคือ { choosePackage.name}
+                </div>
+                <div className="mt-3 h5">
+                    ราคา <span className="text-danger">{ parseInt(choosePackage.price).toLocaleString('th-TH')}</span> บาท/เดือน
+                </div>
                 <div className='table-response-sm mt-3'>
                     <table className=' table table-bordered table-striped'>
                         <thead>
@@ -451,6 +470,15 @@ function SideBar() {
                             )) : <tr><td colSpan={3}>ไม่มีข้อมูล</td></tr>}
                         </tbody>
                     </table>
+                    <div className='alert mt-3 alert-info'>
+                       <i className='fa fa-info-circle me-2 '></i>   เมื่อโอนชำระเงินเรียบร้อยแล้ว ให้นำสลิปไปแจ้งที่  Line ที่ 09xxxxxxxx
+                    </div>
+
+                    <div className="mt-3 text-center">
+                        <button className='btn btn-primary rounded-0' onClick={handleChangePackage}>
+                            <i className='fa fa-check me-2'></i> ยืนยันการสมัคร
+                        </button>
+                    </div>
                 </div>
             </Modal>
         </div>
