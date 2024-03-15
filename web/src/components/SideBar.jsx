@@ -13,8 +13,11 @@ function SideBar() {
     const [editMembername, setEditMembername] = useState();
     const [editPassword, setEditPassword] = useState(null);
     const [packages, setpackages] = useState([]);
+    const [totalBills, setTotalBills] = useState(0);
+    const [billAmount, setBillAmount] = useState(0)
     useEffect(() => {
         fetchData()
+        fetchDatatotalbill()
     }, [])
     const fetchData = async () => {
         try {
@@ -23,6 +26,7 @@ function SideBar() {
                 setMemberId(response.data.body.id)
                 setMembername(response.data.body.name);
                 setPackageName(response.data.body.package.name);
+                setBillAmount(response.data.body.package.bill_amount)
             }
         } catch (error) {
             localStorage.removeItem('isLoginMember')
@@ -35,9 +39,22 @@ function SideBar() {
                 localStorage.removeItem('isLoginMember')
                 localStorage.removeItem('pos_token')
                 window.location.href = "/login"
-            } else {
-                console.log('eeeeeee')
+            } 
+        }
+    }
+    const fetchDatatotalbill = async() => {
+        try {
+            const response = await axios.get(`${config.api_path}package/countTotalUse`,config.headers());
+            if(response.status === 200) {
+                setTotalBills(response.data.countBill)
             }
+        } catch (error) {
+            setTotalBills(0)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: `${error.response.data.message}`,
+            })
         }
     }
     const handleLogout = () => {
@@ -184,8 +201,6 @@ function SideBar() {
     }
     const renderButton = (item) => {
         if (packageName == item.name) {
-            console.log('ee')
-
             return (
                 <button type="button" className='btn btn-primary w-100 rounded ' data-bs-toggle="modal" data-bs-target="#modalRegister" tabIndex={item.id} disabled > <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
             )
@@ -194,6 +209,10 @@ function SideBar() {
                 <button type="button" className='btn btn-primary w-100 rounded  ' data-bs-toggle="modal" data-bs-target="#modalRegister" tabIndex={item.id}> <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
             )
         }
+    }
+    const calculatePercentage = (totalBill,billAmount) => {
+        const percentage = ((totalBill * 100) / billAmount) 
+        return percentage
     }
     return (
         <div>
@@ -218,17 +237,25 @@ function SideBar() {
                             <div className='d-grid gap-0 d-md-block'>
                                 <button type="button" className='btn btn-warning mt-2 w-100' data-bs-toggle="modal" data-bs-target="#modalUpgrad" tabIndex="-1" onClick={fetchPackage} > <i className='fa fa-arrow-up me-2'></i><b>Upgrade</b></button>
                             </div>
-                           
-                            <div className="progress mt-3" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                <div className="progress-bar" style={ {"width":"25%"}}>25%</div>
-                            </div>    
                         </div>
-                        
+
+                    </div>
+                    <div className='ms-2 me-2'>
+                        <div className='float-start'>
+                            {parseInt(totalBills).toLocaleString('th-TH')}   / { parseInt(billAmount).toLocaleString('th-TH')}
+                        </div>
+                        <div className='float-end'>
+                           {calculatePercentage(totalBills, billAmount) + '%' }
+                        </div>
+                        <div className="clearfix"></div>
+                    </div> 
+                    <div className="ms-2 me-2 progress " role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                        <div className="progress-bar"
+                         style={{ "width":calculatePercentage(totalBills, billAmount) + '%' }}></div>
                     </div>
 
 
-
-                    <nav className="mt-2">
+                    <nav className="mt-3">
                         <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                             <li className="nav-header">เมนู</li>
 
@@ -365,19 +392,16 @@ function SideBar() {
             </Modal>
 
             <Modal id="modalUpgrad" title="เลือกแพ็คเกจที่ต้องการ" modalSize="modal-lg">
-                {console.log(packages)}
                 <div className="row">
                     {packages.length > 0 ? packages.map((item, index) => (
                         <React.Fragment key={index}>
-                            <div className="col-sm-4">
-                                <div className="card border-primary  mb-3 h-100">
+                            <div className="col-sm-4 mt-3  mb-3">
+                                <div className="card border-primary   h-100 ">
                                     <div className="card-body">
                                         <div className='h4 text-success'>{item.name}</div>
-                                        <div className='h5'> <strong className='text-primary'> ราคา {parseInt(item.price).toLocaleString('th-TH')} &nbsp; ./เดือน </strong></div>
-                                        <div className='  '>จำนวนบิล <strong className='text-danger'> {parseInt(item.bill_amount).toLocaleString('th-TH')}</strong> ต่อบิล</div>
+                                        <div className='h5 me-2 me-2'> <strong className='text-primary'> ราคา {parseInt(item.price).toLocaleString('th-TH')}  ./เดือน </strong></div>
+                                        <div className='  me-2 me-2 '>จำนวนบิล <strong className='text-danger'> {parseInt(item.bill_amount).toLocaleString('th-TH')}</strong> ต่อบิล</div>
                                         <div className='mt-3 text-center'>
-                                            {/* <button type="button" onClick={(e) => chosenPackage(item)} className='btn btn-primary w-100 rounded ' data-bs-toggle="modal" data-bs-target="#modalRegister" tabIndex={item.id}> <i className='fa fa-check me-2'></i> เลือกแพ็กเกจ</button>
-                                             */}
                                             {renderButton(item)}
                                         </div>
                                     </div>

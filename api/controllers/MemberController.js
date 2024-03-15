@@ -69,7 +69,7 @@ const Member = {
                     include:[{
                         model:PackageModels,
                         as:'package',
-                        attributes:['name']
+                        attributes:['name','bill_amount','price']
                     }]
                 })
                 return {
