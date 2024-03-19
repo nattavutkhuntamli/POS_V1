@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState , useRef} from 'react'
 import Template from '../components/Template'
 import Header from '../components/Header'
 import axios from 'axios'
@@ -15,6 +15,8 @@ export default function Sale() {
     const [LastBill, setLastBill] = useState({})
     const [TodayBill, setTodayBill] = useState([])
     const [SelectedBill, setSelectedBill] = useState({})
+    
+    const saleRef = useRef() //อ้างอิงหา method
     useEffect(() => {
         fetchData()
         openBill()
@@ -204,6 +206,9 @@ export default function Sale() {
                                 openBill()
                                 fetchBillSaleDetail()
                                 handleClose()
+                                if(saleRef.current){
+                                    saleRef.current.refreshCountBill();
+                                }
                                 setInputMoney(0)
                             })
                         }
@@ -258,7 +263,7 @@ export default function Sale() {
     }
     return (
         <div>
-            <Template>
+            <Template ref={saleRef}>
                 <Header title="รายการสินค้า" breadMain="หน้าแรก" breadActive="สินค้า" />
                 <div className="card"  style={{ maxHeight: "80vh", overflowY: "auto"  }}>
                     <div className="card-header bg-white">
