@@ -44,5 +44,26 @@ module.exports = {
         }catch(e){
             throw{statusCode:400 || e.statusCode, message:e.message}
         }
+    },
+    info:async(payload) => {
+        try {
+            const admin = await AdminModel.findOne({
+                where: {
+                    id: payload.id,
+                },
+                attributes:['id','name','level']
+            });
+            if(admin !=undefined) {
+                 return {
+                    statusCode: 200,
+                    message:'success',
+                    body: admin
+                 }
+            }else{
+                throw { statusCode: 404, message: "ไม่พบข้อมูล" }
+            }
+        } catch (error) {
+            throw{statusCode:400 || error.statusCode, message:error.message}
+        }
     }
 }

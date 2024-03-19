@@ -12,7 +12,19 @@ router.get('/list', async(req,res) => {
         })
     }
 })
-
+router.get('/info', Service.isLoginAdmin, async(req, res) => {
+    try{
+        const payload = {
+            id:req.admin
+        }
+        const response =await AdminController.info(payload)
+        return res.status(200).json(response)
+    }catch(error){
+        return res.status(error.statusCode || 500 ).json({
+            message: error.message ||'server error'
+        })
+    }
+})
 router.post('/signin', async(req, res) => {
     try {
         const payload = {
