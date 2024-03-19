@@ -14,7 +14,7 @@ function Login() {
     useEffect(() => {
         const isLoginMember = localStorage.getItem("isLoginMember");
         if (isLoginMember !== null && isLoginMember === 'true') {
-            navigate('/home');
+            navigate('/sale');
         }
     }, [navigate]);
     const handleLogin = async(e) => {
@@ -34,7 +34,7 @@ function Login() {
                 localStorage.setItem("isLoginMember", response.data.isLogin);
                 localStorage.setItem(config.token_name,response.data.token);
                 setTimeout(() => {
-                    navigate('/home');
+                    navigate('/sale');
                 }, 1500);
             }else {
                 Swal.fire({
