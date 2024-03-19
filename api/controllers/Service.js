@@ -50,28 +50,22 @@ module.exports = {
                     message: 'Unauthorized'
                 })
             }else{
-                try {
-                    const decodedToken = jwt.decode(token,{complete: true});
-                    if(decodedToken.payload.exp <= Date.now() /1000){
-                        res.status(401).json({
-                            message: 'Token has expired'
-                        })
-                    }else{
-                        const verify = await jwt.verify(token,secret);
-                        if(verify != null){
-                           req.admin= verify.id;
-                           next();
-                        }else{
-                            res.status(401).json({
-                                message: 'Unauthorized'
-                            })
-                        }
-    
-                    }
-                } catch (error) {
-                    return res.status(400).json({
-                        message: error.message ||'server error'
+                const decodedToken = jwt.decode(token,{complete: true});
+                if(decodedToken.payload.exp <= Date.now() /1000){
+                    res.status(401).json({
+                        message: 'Token has expired'
                     })
+                }else{
+                    const verify = await jwt.verify(token,secret);
+                    if(verify != null){
+                       req.admin= verify.id;
+                       next();
+                    }else{
+                        res.status(401).json({
+                            message: 'Unauthorized'
+                        })
+                    }
+
                 }
                 
             }

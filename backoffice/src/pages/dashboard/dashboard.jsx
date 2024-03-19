@@ -4,7 +4,13 @@ export default function dashboard() {
   return (
     <>
         <Template>
-          <div>dashboard</div>
+         <div className="card">
+            <div className="card-header">
+                รายงานคนทีใช้บริการ
+            </div>
+            <div className="card-body">
+            </div>
+         </div>
         </Template>
     </>
   )

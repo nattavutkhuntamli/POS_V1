@@ -4,6 +4,31 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config()
 const Member = {
+    list : async() =>{
+        try {
+            MemberModels.belongsTo(PackageModels)
+            const getAll = await MemberModels.findAll({
+                order:[['id','desc']],
+                attributes:['id','name','phone','createdAt'],
+                include:[{
+                    model:PackageModels,
+                    as:'package',
+                    attributes:['name']
+                }]
+            });
+            if(getAll.length > 0) {
+                return {
+                    statusCode: 200,
+                    body: getAll
+                }
+            }else{
+                throw { statusCode: 404, message: "ไม่พบข้อมูลสำเร็จ" }
+            }
+        } catch (error) {
+          throw { statusCode: error.statusCode || 400, message: error.message };
+            
+        }
+    },
     createMember: async(data) => {
         try {
             const isValidateMember = await MemberModels.findAll({

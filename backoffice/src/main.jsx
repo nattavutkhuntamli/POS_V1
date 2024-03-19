@@ -4,7 +4,7 @@ import App from './App.jsx'
 import { createBrowserRouter, RouterProvider,  Navigate } from 'react-router-dom';  
 
 import dashboard  from './pages/dashboard/dashboard.jsx'
-
+import Reportmember from './pages/ReportMember/Reportmember.jsx';
 const ProtectedRoute = ({ element:Element, ...rest}) => {
   const isLoginBackend = localStorage.getItem('isLoginBackend')
   if (isLoginBackend === null) {
@@ -23,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <ProtectedRoute element={dashboard} />
+  },
+  {
+    path: "/Reportmember",
+    element: <ProtectedRoute element={Reportmember} />
   },
 ]);
 

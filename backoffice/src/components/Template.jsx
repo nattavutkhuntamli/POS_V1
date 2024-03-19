@@ -53,37 +53,50 @@ export default function Template(props) {
     }
     return (
         <>
-            <div className='row'>
-                <div className='col-xxl-2 col-xl-2 ps-4 pt-2' style={{height:'100dvh', background:"#182d1b"}}>
+            <div className='d-flex'>
+                <div  className='bg-dark ps-2 pe-3' style={{height:'100dvh', width:"360px"}}>
                     <div className="text-white">
-                        <div className='p-3'> {admin.name} : {admin.level}</div>
-                        <div className='mt-3'> <button className='btn  btn-lg btn-outline-danger w-100' onClick={handleLogout}>Sign out</button></div>
+                        <div className='p-3 text-warning h5 ms-2'> {admin.name} : {admin.level}</div>
+                        <div className='ms-2'> 
+                            <button 
+                               className='btn btn-outline-warning btn-lg' 
+                               onClick={handleLogout}>
+                                ออกจากระบบ
+                            </button>
+                        </div>
+                          <hr  className='mt-4' />
                     </div>
-                   <div className='d-grid gap-3 mt-5'>
-                      <Link to="/dashboard" className={location.pathname==='/dashboard' ? 'btn  btn-lg btn-default w-100 rounded text-start active' :'btn  btn-lg btn-default w-100 rounded text-start'}>
+                   <div className='d-grid gap-3 mt-2'>
+                      <Link to="/dashboard" className={location.pathname==='/dashboard' ? 'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active ' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
+                         <i className='fa fa-home-alt text-white me-2'></i>Dashboard
+                      </Link>
+                      <Link to="/Reportmember" className={location.pathname==='/Reportmember' ? 'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active ' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานคนทีใช้บริการ
                       </Link>
-                      <Link to="/dashboard" className={location.pathname==='/dashboard' ? 'btn  btn-sm btn-default w-100 rounded text-start active' :'btn  btn-lg btn-default w-100 rounded text-start'}>
+                      <Link to="/dashboard1" className={location.pathname==='/dashboard1' ? 'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active ' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
+                         <i className='fa fa-file-alt text-white me-2'></i>รายงานคนทีใช้บริการ
+                      </Link>
+                      <Link to="/package" className={location.pathname==='/package' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานคนที่ขอปลี่ยน แพกเกจ
                       </Link>
                       
-                      <Link to="/dashboard" className={location.pathname==='/dashboard' ? 'btn  btn-sm btn-default w-100 rounded text-start active' :'btn  btn-lg btn-default w-100 rounded text-start'}>
+                      <Link to="/report1" className={location.pathname==='/report1' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานรายได้รายวัน
                       </Link>
-                      <Link to="/dashboard" className={location.pathname==='/dashboard' ? 'btn  btn-sm btn-default w-100 rounded text-start active' :'btn  btn-lg btn-default w-100 rounded text-start'}>
+                      <Link to="/report2" className={location.pathname==='/report2' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานรายได้รายเดือน
                       </Link>
-                      <Link to="/dashboard" className={location.pathname==='/dashboard' ? 'btn  btn-sm btn-default w-100 rounded text-start active' :'btn  btn-lg btn-default w-100 rounded text-start'}>
+                      <Link to="/report3" className={location.pathname==='/report3' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานรายได้รายปี
                       </Link>
-                      <Link to="/dashboard" className={location.pathname==='/dashboard' ? 'btn  btn-sm btn-default w-100 rounded text-start active' :'btn  btn-lg btn-default w-100 rounded text-start'}>
+                      <Link to="/report4" className={location.pathname==='/report4' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-user-alt text-white me-2'></i>ผู้ใช้ระบบ
                       </Link>
                       
                       
                    </div>
                 </div>
-                <div className='col-xxl-10 col-xl-10 ps-4 pt-5'>
+                <div className='p-3' style={{width:'100%'}}>
                     {props.children}
                 </div>
             </div>

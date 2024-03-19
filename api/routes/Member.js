@@ -2,6 +2,16 @@ const express = require('express')
 const router  =  express.Router()
 const MemberController = require('../controllers/MemberController')
 const Service = require('../controllers/Service');
+router.get('/list',Service.isLogin, async(req,res) => { 
+    try {
+        const results = await MemberController.list()
+        return res.status(200).json(results)
+    } catch (error) {
+        return res.status(error.statusCode || 500 ).json({
+            message: error.message ||'server error'
+        })
+    }
+})
 router.get('/info', Service.isLogin, async(req,res) => {
     try {
         const token = req.member

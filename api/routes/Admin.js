@@ -12,10 +12,10 @@ router.get('/list', async(req,res) => {
         })
     }
 })
-router.get('/info', Service.isLoginAdmin, async(req, res) => {
+router.get('/info', Service.isLogin, async(req, res) => {
     try{
         const payload = {
-            id:req.admin
+            id:req.member
         }
         const response =await AdminController.info(payload)
         return res.status(200).json(response)
