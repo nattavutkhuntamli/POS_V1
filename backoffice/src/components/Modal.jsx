@@ -14,7 +14,7 @@ function Modal(props) {
                 <div className={modalSize} role="document">
                     <div className="modal-content border-primary">
                         <div className="modal-header ">
-                            <h5 className="modal-title " id="modal-title">{props.title}</h5>
+                            <h5 className="modal-title " id="modal-title"><i className={props.icon}></i>{props.title}</h5>
                             <button id="btnModalClose" type="button" className="close btnClose" data-dismiss="modal" aria-label="Close"  onClick={handleClose} >
                                 <span aria-hidden="true">&times;</span>
                             </button>

@@ -6,20 +6,35 @@ import Swal from 'sweetalert2'
 import Modal from '../../components/Modal'
 export default function ReportChangePackage() {
     const [changepackages, setChangepackages] = useState([]);
-    const [arrHour, setarrHour] = useState(() => {
+    const [arrHour, setHour] = useState(() => {
         let arr =[];
         for(let i = 1; i <= 24; i++){
             arr.push(i);
         }
         return arr;
     });
-    const [arrminute, setarrminute] = useState(() => {
+    const [arrminute, setMinute] = useState(() => {
         let arr =[];
         for(let i = 1; i <= 60; i++){
             arr.push(i);
         }
         return arr;
     })
+    const [ChangePackage, setPackageId] = useState([]);
+    const [payDate, setPayDate] = useState(() => {
+        const myDate = new Date();
+        return myDate.toISOString().split('T')[0]; // เราต้องการ format วันที่ให้อยู่ในรูปแบบ YYYY-MM-DD
+    });
+    const [payHour, setPayHour] = useState(() => {
+        const d = new Date();
+        return d.getHours();
+    })
+    const [payMinute, setPayMinute] = useState(() => {
+        const d = new Date();
+        return d.getMinutes()
+    })
+    const [remark ,setremark] = useState();
+
     useEffect(() => {
         changePackageData()
     }, [])
@@ -34,6 +49,58 @@ export default function ReportChangePackage() {
             console.log(error)
         }
     }
+     
+    const handleSave = async(e) => {
+        e.preventDefault();
+        try {
+            const payload = {
+                id:ChangePackage.id,
+                payDate: payDate,
+                hour: payHour,
+                minute: payMinute,
+                remark: remark
+            }
+            Swal.fire({
+                icon: 'question',
+                title: 'บันทึกข้อมูล',
+                text: 'ยืนยันการบันทึกข้อมูลการชำระเงิน',
+                confirmButtonColor: '#3085d6',
+                showDenyButton: true,
+            }).then(async (res) => {
+                if(res.isConfirmed) {
+                    const send = await axios.post(`${config.api_path}changepackage/save`,payload,config.headers());
+                    if(send.status === 200) {
+                        Swal.fire({
+                            icon:'success',
+                            title: 'บันทึกข้อมูล',
+                            text:  send.data.message,
+                        })
+                        changePackageData()
+                        const btns = document.getElementsByClassName('btnClose');
+                        for(let i =0; i< btns.length; i++){
+                            btns[i].click();
+                        }
+                    }
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ยกเลิก',
+                        text: 'ยกเลิกการบันทึกข้อมูลการชำระเงิน',
+                        confirmButtonColor: '#3085d6',
+                        showDenyButton: true,
+                    })
+                }
+            })
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'error',
+                text: 'อัพเดทข้อมูลไม่สำเร็จ',
+                confirmButtonColor: '#3085d6',
+                showDenyButton: true,
+            })
+        }
+    };
     return (
         <>
             <Template>
@@ -67,7 +134,7 @@ export default function ReportChangePackage() {
                                                  <td className="text-end"> { parseInt(Item.package.price).toLocaleString('th-TH')}</td>
                                                  <td className='text-center'>{Item.status}</td>
                                                  <td>
-                                                    <button className='btn  btn-sm btn-success roundend' data-target="#modalPay" data-toggle="modal">
+                                                    <button className='btn  btn-sm btn-success roundend' onClick={e => setPackageId(Item)} data-target="#modalPay" data-toggle="modal">
                                                          <i className="fa fa-check me-2"></i> 
                                                          ได้รับเงินแล้ว
                                                     </button>
@@ -83,10 +150,11 @@ export default function ReportChangePackage() {
                     </div>
                 </div>
             </Template>
-            <Modal id="modalPay" title="รายการที่ชำระเงิน">
+            <Modal id="modalPay" icon="fa fa-file-alt me-1" title=" บันทึกข้อมูล เมื่อได้รับการชำระเงิน">
                <div>
                     <label htmlFor="payDate">วันที่ชำระเงิน</label>
-                    <input type="date" className='form-control' />
+                    <input type="date" value={payDate} className='form-control' onChange={e => setPayDate(e.target.value)} />
+
                </div>
                <div>
                     <label htmlFor="payTime">เวลา</label>
@@ -94,7 +162,7 @@ export default function ReportChangePackage() {
                         <div className="col-6">
                             <div className="input-group">
                                 <div className="input-group-text">ชั่วโมง</div>
-                                <select name="" id="" className='form-control'>
+                                <select value={payHour} className='form-control' onChange={e => setPayHour(e.target.value)}>
                                     { arrHour.length > 0 ? arrHour.map((item,index) => (
                                         <option key={index} value={item}>{item}</option>
                                     )): null}
@@ -104,7 +172,7 @@ export default function ReportChangePackage() {
                         <div className="col-6">
                             <div className="input-group">
                                 <div className="input-group-text">นาที</div>
-                                <select name="" id="" className='form-control'>
+                                <select  value={payMinute} className='form-control' onChange={e => setPayMinute(e.target.value)}>
                                      { arrminute.length > 0 ? arrminute.map((item,index) => (
                                         <option key={index} value={item}>{item}</option>
                                      )): null}
@@ -115,10 +183,10 @@ export default function ReportChangePackage() {
                </div>
                <div className='mt-3'>
                     <label htmlFor="payRemart">หมายเหตุ</label>
-                    <input type="text" className='form-control' />
+                    <input type="text" className='form-control' onChange={e => setremark(e.target.value)} />
                </div>
                <div className='mt-3'>
-                    <button className='btn btn-primary w-100 rounded'>
+                    <button onClick={handleSave} className='btn btn-primary w-100 rounded'>
                        <i className='fa fa-check me-2'></i>
                        บันทึกข้อมูลการชำระเงิน
                     </button>

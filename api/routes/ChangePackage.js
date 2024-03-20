@@ -15,4 +15,16 @@ Router.get('/list' , Service.isLogin, async(req, res) => {
     }
 });
 
+
+Router.post('/save', Service.isLogin, async(req, res) => {
+    try {
+        const response = await ChangePackage.SavePackage(req.body)
+        return res.status(200).json(response)        
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message || 'Service not found'
+        });
+    }
+});
+
 module.exports = Router
