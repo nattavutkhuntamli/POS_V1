@@ -73,7 +73,7 @@ export default function Template(props) {
                       <Link to="/Reportmember" className={location.pathname==='/Reportmember' ? 'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active ' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานคนทีใช้บริการ
                       </Link>
-                      <Link to="/dashboard1" className={location.pathname==='/dashboard1' ? 'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active ' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
+                      <Link to="/ReportChangePackage" className={location.pathname==='/ReportChangePackage' ? 'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active ' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานคนทีใช้บริการ
                       </Link>
                       <Link to="/package" className={location.pathname==='/package' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>

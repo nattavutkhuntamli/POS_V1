@@ -14,6 +14,18 @@ const ChangePackageModel = client.define('changepackage',{
     userId:{
         type:DataTypes.BIGINT,
     },
+    payDate:{
+        type:DataTypes.DATE
+    },
+    payHour:{
+        type:DataTypes.BIGINT
+    },
+    payMinute:{
+        type:DataTypes.BIGINT
+    },
+    payRemark:{
+        type:DataTypes.STRING
+    },
     status:{
         type:DataTypes.STRING,
         defaultValue: 'wait',

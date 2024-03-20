@@ -10,5 +10,7 @@ router.use('/billsale',require('./BillSale'));
 router.use('/stock',require('./Stock'));
 router.use('/bank', require('./Bank'));
 router.use('/admin', require('./Admin'));
+router.use('/changepackage', require('./ChangePackage'));
+
 
 module.exports = router
