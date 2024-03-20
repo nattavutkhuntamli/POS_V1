@@ -17,6 +17,7 @@ router.get('/info', Service.isLogin, async(req, res) => {
         const payload = {
             id:req.member
         }
+        console.log(payload)
         const response =await AdminController.info(payload)
         return res.status(200).json(response)
     }catch(error){

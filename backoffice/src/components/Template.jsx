@@ -20,11 +20,13 @@ export default function Template(props) {
         } catch (error) {
             if(error) {
                 if(error.response.status === 401) {
-                    localStorage.removeItem('isLoginMember')
+                    localStorage.removeItem('isLoginBackend')
                     localStorage.removeItem('pos_token')
                     window.location.href = "/"
                 }else{
-                    console.log(error)
+                    localStorage.removeItem('isLoginBackend')
+                    localStorage.removeItem('pos_token')
+                    window.location.href = "/"
                 }
             }
         }

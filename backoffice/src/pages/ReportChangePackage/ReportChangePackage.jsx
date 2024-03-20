@@ -3,8 +3,23 @@ import Template from '../../components/Template'
 import axios from 'axios'
 import config from '../../config'
 import Swal from 'sweetalert2'
+import Modal from '../../components/Modal'
 export default function ReportChangePackage() {
-    const [changepackages, setChangepackages] = useState([])
+    const [changepackages, setChangepackages] = useState([]);
+    const [arrHour, setarrHour] = useState(() => {
+        let arr =[];
+        for(let i = 1; i <= 24; i++){
+            arr.push(i);
+        }
+        return arr;
+    });
+    const [arrminute, setarrminute] = useState(() => {
+        let arr =[];
+        for(let i = 1; i <= 60; i++){
+            arr.push(i);
+        }
+        return arr;
+    })
     useEffect(() => {
         changePackageData()
     }, [])
@@ -42,7 +57,6 @@ export default function ReportChangePackage() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {console.log(changepackages)}
                                    {changepackages.length > 0 && changepackages != []  ? changepackages.map((Item,index) => (
                                         <React.Fragment key={index}>
                                             <tr>
@@ -53,7 +67,7 @@ export default function ReportChangePackage() {
                                                  <td className="text-end"> { parseInt(Item.package.price).toLocaleString('th-TH')}</td>
                                                  <td className='text-center'>{Item.status}</td>
                                                  <td>
-                                                    <button className='btn  btn-sm btn-success roundend'>
+                                                    <button className='btn  btn-sm btn-success roundend' data-target="#modalPay" data-toggle="modal">
                                                          <i className="fa fa-check me-2"></i> 
                                                          ได้รับเงินแล้ว
                                                     </button>
@@ -69,6 +83,47 @@ export default function ReportChangePackage() {
                     </div>
                 </div>
             </Template>
+            <Modal id="modalPay" title="รายการที่ชำระเงิน">
+               <div>
+                    <label htmlFor="payDate">วันที่ชำระเงิน</label>
+                    <input type="date" className='form-control' />
+               </div>
+               <div>
+                    <label htmlFor="payTime">เวลา</label>
+                    <div className="row">
+                        <div className="col-6">
+                            <div className="input-group">
+                                <div className="input-group-text">ชั่วโมง</div>
+                                <select name="" id="" className='form-control'>
+                                    { arrHour.length > 0 ? arrHour.map((item,index) => (
+                                        <option key={index} value={item}>{item}</option>
+                                    )): null}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="col-6">
+                            <div className="input-group">
+                                <div className="input-group-text">นาที</div>
+                                <select name="" id="" className='form-control'>
+                                     { arrminute.length > 0 ? arrminute.map((item,index) => (
+                                        <option key={index} value={item}>{item}</option>
+                                     )): null}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+               <div className='mt-3'>
+                    <label htmlFor="payRemart">หมายเหตุ</label>
+                    <input type="text" className='form-control' />
+               </div>
+               <div className='mt-3'>
+                    <button className='btn btn-primary w-100 rounded'>
+                       <i className='fa fa-check me-2'></i>
+                       บันทึกข้อมูลการชำระเงิน
+                    </button>
+               </div>
+            </Modal>
         </>
     )
 }
