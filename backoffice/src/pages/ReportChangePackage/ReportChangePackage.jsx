@@ -46,7 +46,7 @@ export default function ReportChangePackage() {
                 setChangepackages(results.data.body)
             }
         } catch (error) {
-            console.log(error)
+            // console.log(error)
         }
     }
      
@@ -142,7 +142,7 @@ export default function ReportChangePackage() {
                                             </tr>
                                         </React.Fragment>
                                     )
-                                   ) : <tr><td colSpan={5}>ไม่มีข้อมูล</td></tr>}
+                                   ) : <tr className='text-center'><td colSpan={7}><i className="fa-solid fa-circle-exclamation me-2 text-danger"></i> ไม่มีข้อมูล</td></tr>}
                                
                                 </tbody>
                             </table>

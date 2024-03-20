@@ -19,7 +19,10 @@ module.exports = {
                     {
                         model:MemberModels,
                     }
-                ]
+                ],
+                where:{
+                    status:'wait'
+                }
             });
             if(results.length > 0) {
                 return {
@@ -36,33 +39,7 @@ module.exports = {
     },
     SavePackage: async ( payload) => {
         try{
-            // const update = await ChangePackage.update(
-            //     {
-            //         status: payload.status,
-            //         payDate: payload.payDate,
-            //         payHour: payload.hour,
-            //         payMinute: payload.minute,
-            //         payRemark:payload.remark
-            //     },
-            //     {
-            //         where:{
-            //             id:payload.id
-            //         }
-            //     }
-            // );
-            // if(update) {
-            //     const updateMember = await MemberModels.update({
-            //         packageId: payload.packageId
-            //     })
-            //     return {
-            //         statusCode: 200,
-            //         message:'success',
-            //         body: update
-            //     }
-            // }else{
-            //     throw { statusCode: 400, message: "Package update false" };
-
-            // }
+            
 
             const isChanagePackage = await ChangePackage.findOne({
                 where:{
