@@ -96,7 +96,6 @@ module.exports = {
             let m = payload.mounth;
             let daysInMonth = new Date(y,m,0).getDate() //ดึงวันของเดือนนั้นว่ามีกี่วัน
             const Op = Sequelize.Op;
-            console.log(daysInMonth)
             
             ChangePackage.belongsTo(Package);
             ChangePackage.belongsTo(MemberModels,{
@@ -104,19 +103,19 @@ module.exports = {
                     name:"userId"
                 }
             });
-            for(let i = 1; i <= daysInMonth; i++) {
+            for(let i = 0; i <= daysInMonth; i++) {
                 const results = await ChangePackage.findAll({
                     where:{
                         [Op.and]: [
-                            Sequelize.where(Sequelize.fn('EXTRACT', Sequelize.literal('YEAR FROM "changepackages"."createdAt"')), '=', y),
-                            Sequelize.where(Sequelize.fn('EXTRACT', Sequelize.literal('MONTH FROM "changepackages"."createdAt"')), '=', m),
-                            Sequelize.where(Sequelize.fn('EXTRACT', Sequelize.literal('DAY FROM "changepackages"."createdAt"')), '=', i),
-                          ]
+                            Sequelize.fn('EXTRACT(YEAR FROM "changepackage"."createdAt") = ', y),
+                            Sequelize.fn('EXTRACT(MONTH FROM "changepackage"."createdAt") = ', m),
+                            Sequelize.fn('EXTRACT(DAY FROM "changepackage"."createdAt") = ', i),
+                        ]
                     },
                     include:[
                         {
                             model:Package,
-                            attributes:['name']
+                            attributes:['name','price']
                         },
                         {
                             model:MemberModels,
@@ -124,12 +123,18 @@ module.exports = {
                         }
                     ]
                 })
-                arr.push({ results:results})
+
+                let sum = 0;
+                for(let j=0; j < results.length; j++){
+                    const item = results[j];
+                    sum+= parseInt(item.package.price)
+                }
+                arr.push({ day:i,results:results,sum:sum})
             }
             return {
                 statusCode: 200,
                 message:'success',
-                body: arr
+                results: arr
             }
 
         } catch (error) {

@@ -53,7 +53,7 @@ export default function index() {
         }
         const res = await axios.post(`${config.api_path}changepackage/reportSumSalePerDay`, payload, config.headers());
         if (res.status === 200) {
-            setResults(res.data.body);
+            setResults(res.data.results);
         }
     } catch (error) {
         console.log(error)
