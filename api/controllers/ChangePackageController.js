@@ -1,6 +1,8 @@
 const ChangePackage = require('../models/ChangePackageModel')
 const Package = require('../models/PackageModels');
 const MemberModels = require('../models/MemberModels');
+const { Sequelize } = require("sequelize");
+
 module.exports = {
     ListPackage: async () => {
         try{
@@ -39,8 +41,6 @@ module.exports = {
     },
     SavePackage: async ( payload) => {
         try{
-            
-
             const isChanagePackage = await ChangePackage.findOne({
                 where:{
                     id:payload.id
@@ -85,6 +85,54 @@ module.exports = {
                 throw { statusCode: 400, message: "ไม่พบข้อมูล Package ที่ต้องการอัพเดท" };
             }
         }catch(error) {
+            throw { statusCode: 400, message: error.message };
+        }
+    }, 
+    ReportSumSalePerDay : async(payload) => {
+        try {
+            // console.log(payload)   userId year month
+            let arr = [];
+            let y = payload.year;
+            let m = payload.mounth;
+            let daysInMonth = new Date(y,m,0).getDate() //ดึงวันของเดือนนั้นว่ามีกี่วัน
+            const Op = Sequelize.Op;
+            console.log(daysInMonth)
+            
+            ChangePackage.belongsTo(Package);
+            ChangePackage.belongsTo(MemberModels,{
+                foreignKey:{
+                    name:"userId"
+                }
+            });
+            for(let i = 1; i <= daysInMonth; i++) {
+                const results = await ChangePackage.findAll({
+                    where:{
+                        [Op.and]: [
+                            Sequelize.where(Sequelize.fn('EXTRACT', Sequelize.literal('YEAR FROM "changepackages"."createdAt"')), '=', y),
+                            Sequelize.where(Sequelize.fn('EXTRACT', Sequelize.literal('MONTH FROM "changepackages"."createdAt"')), '=', m),
+                            Sequelize.where(Sequelize.fn('EXTRACT', Sequelize.literal('DAY FROM "changepackages"."createdAt"')), '=', i),
+                          ]
+                    },
+                    include:[
+                        {
+                            model:Package,
+                            attributes:['name']
+                        },
+                        {
+                            model:MemberModels,
+                            attributes:['name']
+                        }
+                    ]
+                })
+                arr.push({ results:results})
+            }
+            return {
+                statusCode: 200,
+                message:'success',
+                body: arr
+            }
+
+        } catch (error) {
             throw { statusCode: 400, message: error.message };
         }
     }

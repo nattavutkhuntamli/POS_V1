@@ -19,6 +19,7 @@ export default function Template(props) {
             }
         } catch (error) {
             if(error) {
+                console.log(error)
                 if(error.response.status === 401) {
                     localStorage.removeItem('isLoginBackend')
                     localStorage.removeItem('pos_token')
@@ -61,9 +62,14 @@ export default function Template(props) {
                         <div className='p-3 text-warning h5 ms-2'> {admin.name} : {admin.level}</div>
                         <div className='ms-2'> 
                             <button 
-                               className='btn btn-outline-warning btn-lg' 
+                               className='btn btn-outline-warning btn-sm me-2' 
                                onClick={handleLogout}>
                                 ออกจากระบบ
+                            </button>
+                            <button 
+                               className='btn btn-outline-warning btn-sm me-2' 
+                               onClick={handleLogout}>
+                                เปลี่ยนรหัสผ่าน
                             </button>
                         </div>
                           <hr  className='mt-4' />
@@ -75,14 +81,11 @@ export default function Template(props) {
                       <Link to="/Reportmember" className={location.pathname==='/Reportmember' ? 'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active ' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานคนทีใช้บริการ
                       </Link>
-                      <Link to="/ReportChangePackage" className={location.pathname==='/ReportChangePackage' ? 'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active ' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
-                         <i className='fa fa-file-alt text-white me-2'></i>รายงานคนทีใช้บริการ
-                      </Link>
-                      <Link to="/package" className={location.pathname==='/package' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
+                      <Link to="/ReportChangePackage" className={location.pathname==='/ReportChangePackage' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานคนที่ขอปลี่ยน แพกเกจ
                       </Link>
                       
-                      <Link to="/report1" className={location.pathname==='/report1' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
+                      <Link to="/ReportSumSalePerDay" className={location.pathname==='/ReportSumSalePerDay' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานรายได้รายวัน
                       </Link>
                       <Link to="/report2" className={location.pathname==='/report2' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>

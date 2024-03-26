@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider,  Navigate } from 'react-router-dom
 import dashboard  from './pages/dashboard/dashboard.jsx'
 import Reportmember from './pages/ReportMember/Reportmember.jsx';
 import ReportChangePackage from './pages/ReportChangePackage/ReportChangePackage.jsx';
-
+import ReportSumSalePerDay from './pages/ReportSumSalePerDay/index.jsx';
 const ProtectedRoute = ({ element:Element, ...rest}) => {
   const isLoginBackend = localStorage.getItem('isLoginBackend')
   if (isLoginBackend === null) {
@@ -33,6 +33,10 @@ const router = createBrowserRouter([
   {
     path:"/ReportChangePackage",
     element: <ProtectedRoute element={ReportChangePackage} />
+  },
+  {
+    path:'/ReportSumSalePerDay',
+    element: <ProtectedRoute element={ReportSumSalePerDay} />
   }
 ]);
 

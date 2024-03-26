@@ -8,14 +8,14 @@ export default function ReportChangePackage() {
     const [changepackages, setChangepackages] = useState([]);
     const [arrHour, setHour] = useState(() => {
         let arr =[];
-        for(let i = 1; i <= 24; i++){
+        for(let i = 0; i <= 23; i++){
             arr.push(i);
         }
         return arr;
     });
     const [arrminute, setMinute] = useState(() => {
         let arr =[];
-        for(let i = 1; i <= 60; i++){
+        for(let i = 0; i <= 59; i++){
             arr.push(i);
         }
         return arr;
