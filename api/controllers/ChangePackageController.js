@@ -103,7 +103,7 @@ module.exports = {
                     name:"userId"
                 }
             });
-            for(let i = 0; i <= daysInMonth; i++) {
+            for(let i = 1; i <= daysInMonth; i++) {
                 const results = await ChangePackage.findAll({
                     where:{
                         [Op.and]: [

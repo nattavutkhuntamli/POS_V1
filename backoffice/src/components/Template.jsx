@@ -57,7 +57,7 @@ export default function Template(props) {
     return (
         <>
             <div className='d-flex'>
-                <div  className='bg-dark ps-2 pe-3' style={{height:'100dvh', width:"360px"}}>
+                <div  className='bg-dark ps-2 pe-3' style={{height:'100dvh', width:"360px",position:"fixed",top:0,left:0 }}>
                     <div className="text-white">
                         <div className='p-3 text-warning h5 ms-2'> {admin.name} : {admin.level}</div>
                         <div className='ms-2'> 
@@ -101,7 +101,7 @@ export default function Template(props) {
                       
                    </div>
                 </div>
-                <div className='p-3' style={{width:'100%'}}>
+                <div className=' p-3' style={{width:'100%', overflow:"auto", marginLeft:"360px"}}>
                     {props.children}
                 </div>
             </div>

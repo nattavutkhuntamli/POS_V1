@@ -104,6 +104,58 @@ export default function index() {
                             </button>
                         </div>
                     </div>
+                    <div className="row mt-5">
+                        <div className='table-response-sm'>
+                            <table className='table table-bordered table-striped'>
+                                <thead>
+                                    <tr>
+                                        <th  className='text-center'>วันที่</th>
+                                        <th  className='text-end'>ยอดรวมรายได้</th>
+                                        <th width={250} className='text-center'>รายละเอียด</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {/* {results.length > 0 ? ({results.map((item,index) => (
+                                        <React.Fragment key={index}>
+                                            <tr>
+                                                <td className='text-center'>{item.day}</td>
+                                                <td className='text-end'>{ parseInt(item.sum).toLocaleString('th-TH')}</td>
+                                                <td><button className='btn btn-primary btn-lg rounded-0 w-100'> <i className='fa fa-file-alt me-2'></i> รายละเอียด</button></td>
+                                            </tr>
+                                        </React.Fragment>
+                                    ))}
+                                    <tr>
+                                        <td colSpan={3} className='text-end'>
+                                            ยอดขายรวม <b className='text-success'> {results.reduce((total, item) => total + billItem.sum, 0).toLocaleString('th')} </b>
+                                        </td>
+                                <   /tr>
+                                    
+                                    ) : null} */}
+
+                                    { results.length > 0 ? (
+                                        <>
+                                            {results.map((item,index) => (
+                                                <React.Fragment key={index}>
+                                                    <tr>
+                                                        <td className='text-center'>{item.day}</td>
+                                                        <td className='text-end'>{ parseInt(item.sum).toLocaleString('th-TH')}</td>
+                                                        <td><button className='btn btn-success btn-lg rounded-0 w-100'> <i className='fa fa-file-alt me-2'></i> รายละเอียด</button></td>
+                                                    </tr>
+                                                </React.Fragment>
+                                            ))}
+                                            <tr>
+                                                
+                                                <td colSpan={3} className='text-end'>
+                                                    ยอดขายรวมเดือนนี้ <b className='text-success me-2'> {results.reduce((total, item) => total + item.sum, 0).toLocaleString('th')} </b>
+                                                </td>
+                                            </tr>
+                                        </>
+                                    ) : null }
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Template>
