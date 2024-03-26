@@ -106,6 +106,7 @@ module.exports = {
             for(let i = 1; i <= daysInMonth; i++) {
                 const results = await ChangePackage.findAll({
                     where:{
+                        status:"success",
                         [Op.and]: [
                             Sequelize.fn('EXTRACT(YEAR FROM "changepackage"."createdAt") = ', y),
                             Sequelize.fn('EXTRACT(MONTH FROM "changepackage"."createdAt") = ', m),
