@@ -8,6 +8,14 @@ export default function index() {
     const [results, setResults] = React.useState([]);
     const [errorMessage, setErrorMessage] = React.useState('');
     const [level, setLevel] = React.useState(['admin', 'sub admin']);
+    const [selectedAdmin, setSelectedAdmin] = React.useState({
+        name: "",
+        usr: "",
+        pwd: "",
+        cfpwd: "",
+        email: "",
+        level: "admin"
+    });
     const [input, setInput] = React.useState({
         name: "",
         usr: "",
@@ -74,7 +82,7 @@ export default function index() {
         }
     };
 
-    const deleteUser = async(item) => {
+    const deleteUser = async (item) => {
 
         try {
             setErrorMessage(''); // ล้างข้อความข้อผิดพลาด
@@ -84,20 +92,20 @@ export default function index() {
                 text: 'ยืนยันการลบข้อมูลสมาชิก',
                 confirmButtonColor: '#3085d6',
                 showDenyButton: true,
-            }).then(async(crf) => {
-                if(crf.isConfirmed){
+            }).then(async (crf) => {
+                if (crf.isConfirmed) {
                     const url = `${config.api_path}admin/destroy/${item.id}`
-                    const response =  await axios.delete(`${url}`, config.headers())
+                    const response = await axios.delete(`${url}`, config.headers())
                     if (response.status === 200) {
                         await Swal.fire({
-                            icon:'success',
+                            icon: 'success',
                             title: response.data.message,
                             text: response.data.message,
                             confirmButtonColor: '#3085d6',
                         });
                         fetchData(); // รีเฟรชข้อมูล
                     }
-                }else{
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'ยกเลิก',
@@ -106,12 +114,116 @@ export default function index() {
                     })
                 }
             })
-        }catch(error) {
+        } catch (error) {
             console.log(error)
         }
     }
 
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        try {
+            setErrorMessage(''); // ล้างข้อความข้อผิดพลาด
+            const response = await Swal.fire({
+                icon: 'question',
+                title: 'บันทึกข้อมูล',
+                text: 'ยืนยันการบันทึกข้อมูล',
+                confirmButtonColor: '#3085d6',
+                showDenyButton: true,
+            }).then(async(rf) => {
+                if(rf.isConfirmed){
+                    const url = `${config.api_path}admin/update/${selectedAdmin.id}`
+                    const response =  await axios.put(`${url}`, selectedAdmin, config.headers())
+                    if (response.status === 200) {
+                        await Swal.fire({
+                            icon:'success',
+                            title: response.data.message,
+                            text: response.data.message,
+                            confirmButtonColor: '#3085d6',
+                        });
+                        fetchData(); // รีเฟรชข้อมูล
+                        const btn = document.getElementsByClassName('btnClose');
+                        for (let i = 0; i < btn.length; i++) {
+                            btn[i].click();
+                        }
+                    }
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ยกเลิก',
+                        text: 'ยกเลิกการบันทึกข้อมูล',
+                        confirmButtonColor: '#3085d6',
+                    })
+                }
+            }).catch(error =>{
+               Swal.fire({
+                icon: 'error',
+                title: 'error',
+                text: error.response.data.message,
+                confirmButtonColor: '#3085d6',
+               })
+            })
+        }catch(error){
+            Swal.fire({
+                icon: 'error',
+                title: 'error',
+                text:  error.response.data.message,
+                confirmButtonColor: '#3085d6',
+            })
+        }
+    }
 
+    const handleUpdatePass = async(e) => {
+        e.preventDefault();
+        try {
+            setErrorMessage(''); // ล้างข้อความข้อผิดพลาด
+            const response = await Swal.fire({
+                icon: 'question',
+                title: 'บันทึกข้อมูล',
+                text: 'ยืนยันการบันทึกข้อมูล',
+                confirmButtonColor: '#3085d6',
+                showDenyButton: true,
+            }).then(async(rf) => {
+                if(rf.isConfirmed){
+                    const url = `${config.api_path}admin/editpass/${selectedAdmin.id}`
+                    const response =  await axios.put(`${url}`, selectedAdmin, config.headers())
+                    if (response.status === 200) {
+                        await Swal.fire({
+                            icon:'success',
+                            title: response.data.message,
+                            text: response.data.message,
+                            confirmButtonColor: '#3085d6',
+                        });
+                        fetchData(); // รีเฟรชข้อมูล
+                        const btn = document.getElementsByClassName('btnClose');
+                        for (let i = 0; i < btn.length; i++) {
+                            btn[i].click();
+                        }
+                    }
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ยกเลิก',
+                        text: 'ยกเลิกการบันทึกข้อมูล',
+                        confirmButtonColor: '#3085d6',
+                    })
+                }
+            }).catch(error =>{
+               Swal.fire({
+                icon: 'error',
+                title: 'error',
+                text: error.response.data.message,
+                confirmButtonColor: '#3085d6',
+               })
+            })
+        }catch(error){
+            Swal.fire({
+                icon: 'error',
+                title: 'error',
+                text:  error.response.data.message,
+                confirmButtonColor: '#3085d6',
+            })
+        }
+    }
     return (
         <div>
             <Template>
@@ -148,7 +260,8 @@ export default function index() {
                                                     <td className='text-center'>{item.level}</td>
                                                     <td className='text-center'>{item.email}</td>
                                                     <td className='text-center'>
-                                                        <button className='btn btn-primary me-2' data-target="#modalEdit" data-toggle="modal" onClick={() => edit(item)}>แก้ไข</button>
+                                                        <button className='btn btn-primary me-2' data-target="#modalEdit" data-toggle="modal" onClick={() => setSelectedAdmin(item)}>แก้ไข</button>
+                                                        <button className='btn btn-primary me-2' data-target="#modalEditPass" data-toggle="modal" onClick={() => setSelectedAdmin(item)}>เปลี่ยนรหัสผ่าน</button>
                                                         <button className='btn btn-danger' onClick={() => deleteUser(item)}>ลบ</button>
                                                     </td>
                                                 </tr>
@@ -200,6 +313,76 @@ export default function index() {
                             </button>
                         </div>
                     </form>
+                </Modal>
+
+                <Modal id="modalEdit" icon="fa fa-user-alt" title="แก้ไขข้อมูล" modalSize="modal-lg">
+                    <form onSubmit={handleUpdate}>
+                        <div>
+                            <label>ชื่อ</label>
+                            <input type="text" className='form-control' value={selectedAdmin.name} onChange={e => setSelectedAdmin({ ...selectedAdmin, name: e.target.value })} required />
+                        </div>
+                        <div className='mt-3'>
+                            <label > username</label>
+                            <input type="text" className='form-control' value={selectedAdmin.usr} required disabled />
+                        </div>
+
+                        <div className='mt-3'>
+                            <label > email</label>
+                            <input type="text" className='form-control' value={selectedAdmin.email} onChange={e => setSelectedAdmin({ ...selectedAdmin, email: e.target.value })} required />
+                        </div>
+                        <div className='mt-3'>
+                            <label > ระดับ</label>
+                            <select value={selectedAdmin.level} className='form-control' onChange={e => setSelectedAdmin({ ...selectedAdmin, level: e.target.value })}>
+                                {level.map((item) => (
+                                    <option key={item}>{item}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className='mt-3'>
+                            <button className='btn btn-primary w-100 rounded' >
+                                <i className='fa fa-check me-2'></i>
+                                บันทึกข้อมูลผู้ใช้
+                            </button>
+                        </div>
+                    </form>
+
+                </Modal>
+
+                <Modal id="modalEditPass" icon="fa fa-user-alt" title="แก้ไขรหัสผ่าน" modalSize="modal-lg">
+                    <form onSubmit={handleUpdatePass}>
+                        <div>
+                            <label>ชื่อ</label>
+                            <input type="text" className='form-control' value={selectedAdmin.name} disabled required />
+                        </div>
+                        <div className='mt-3'>
+                            <label > username</label>
+                            <input type="text" className='form-control' value={selectedAdmin.usr} required disabled />
+                        </div>
+                        <div className='mt-3'>
+                            <label > password</label>
+                            <input type="password" className='form-control' value={selectedAdmin.pwd} required   onChange={e => setSelectedAdmin({ ...selectedAdmin, pwd: e.target.value })}/>
+                        </div>
+
+                        <div className='mt-3'>
+                            <label > email</label>
+                            <input type="text" className='form-control' value={selectedAdmin.email} disabled required />
+                        </div>
+                        <div className='mt-3'>
+                            <label > ระดับ</label>
+                            <select value={selectedAdmin.level} className='form-control' disabled required>
+                                {level.map((item) => (
+                                    <option key={item}>{item}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className='mt-3'>
+                            <button className='btn btn-primary w-100 rounded' >
+                                <i className='fa fa-check me-2'></i>
+                                แก้ไขรหัสผ่าน
+                            </button>
+                        </div>
+                    </form>
+
                 </Modal>
             </Template>
         </div>

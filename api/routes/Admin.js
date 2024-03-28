@@ -60,6 +60,38 @@ router.post('/save', Service.isLogin, async(req, res) => {
     }
 })
 
+router.put('/update/:id', Service.isLogin, async(req, res) => {
+    try {
+        const payload = {
+            id:req.params.id,
+            name:req.body.name,
+            email:req.body.email,
+            level:req.body.level
+        }
+        const results = await AdminController.updateAdmin(payload)
+        return res.status(200).json(results)
+    } catch (error) {
+        return res.status(error.statusCode || 500 ).json({
+            message: error.message ||'server error'
+        })
+    }
+});
+
+router.put('/editpass/:id', Service.isLogin, async(req, res,) => {
+    try {
+        const payload = {
+            id:req.params.id,
+            pwd:req.body.pwd
+        }
+        const results = await AdminController.editpass(payload)
+        return res.status(200).json(results)
+    } catch (error) {
+        return res.status(error.statusCode || 500 ).json({
+            message: error.message ||'server error'
+        })
+    }
+});
+
 router.delete('/destroy/:id', Service.isLogin, async(req, res) => {
     try {
         const payload = {

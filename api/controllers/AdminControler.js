@@ -109,5 +109,86 @@ module.exports = {
         } catch (error) {
             throw{statusCode:400 || error.statusCode, message:error.message}
         }
+    },
+
+    updateAdmin: async(payload) => {
+        try {
+            const Search = await AdminModel.findOne({
+                where: {
+                    id: payload.id,
+                }
+            });
+            if(Search != undefined) {
+                const CheckName = await AdminModel.findAll({
+                    where:{
+                        name: payload.name,
+                    }
+                })
+                if(CheckName.length > 0) {
+                    throw { statusCode: 400, message: "มีชือซ้ำไม่สามารถเปลี่ยนได้" }
+                }else{
+                    const update = await AdminModel.update(
+                        {
+                            name: payload.name,
+                            level: payload.level,
+                            email:payload.email
+                        },
+                        {
+                            where: {
+                                id: payload.id,
+                            }
+                        }
+                    );
+                    if(update) {
+                        return {
+                            statusCode: 200,
+                            message:'อัพเดทข้อมูลสำเร็จ',
+                        }
+                    }else{
+                        throw { statusCode: 404, message: "อัพเดทข้อมูลไม่สำเร็จ" }
+                    }
+                }
+              
+               
+            }else{
+                throw { statusCode: 400, message: "ไม่พบข้อมูล" }
+            }
+        } catch (error) {
+            throw{statusCode:400 || error.statusCode, message:error.message}
+        }
+    },
+
+    editpass: async(payload) => {
+        try {
+            const Search = await AdminModel.findOne({
+                where: {
+                    id: payload.id,
+                }
+            });
+            if(Search != undefined) {
+                const update = await AdminModel.update(
+                    {
+                        pwd: payload.pwd,
+                    },
+                    {
+                        where: {
+                            id: payload.id,
+                        }
+                    }
+                );
+                if(update) {
+                    return {
+                        statusCode: 200,
+                        message:'อัพเดทข้อมูลสำเร็จ',
+                    }
+                }else{
+                    throw { statusCode: 404, message: "อัพเดทข้อมูลไม่สำเร็จ" }
+                }
+            }else{
+                throw { statusCode: 400, message: "ไม่พบข้อมูล" }
+            }
+        } catch (error) {
+            throw{statusCode:400 || error.statusCode, message:error.message}
+        }
     }
 }
