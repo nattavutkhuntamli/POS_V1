@@ -65,5 +65,49 @@ module.exports = {
         } catch (error) {
             throw{statusCode:400 || error.statusCode, message:error.message}
         }
+    },
+    save:async(payload) => {
+        try {
+            
+            const Search = await AdminModel.findOne({
+                where: {
+                    usr: payload.usr,
+                }
+            });
+            if(Search != undefined) {
+                throw { statusCode: 400, message: "มีข้อมูลนี้ใช้อยู่แล้ว" }
+            }else{
+                const create = await AdminModel.create(payload)
+                if(create) {
+                    return {
+                        statusCode: 200,
+                        message:'บันทึกข้อมูลสำเร็จ',
+                    }
+                }else{
+                    throw { statusCode: 404, message: "บันทึกข้อมูลไม่สำเร็จ" }
+                }
+            }
+        } catch (error) {
+            throw{statusCode:400 || error.statusCode, message:error.message}
+        }
+    },
+    destroyAdmin: async(payload) => {
+        try {
+            const deleteAdmin = await AdminModel.destroy({
+                where: {
+                    id: payload.id,
+                }
+            })
+            if(deleteAdmin) {
+                return {
+                    statusCode: 200,
+                    message:'ลบข้อมูลสำเร็จ',
+                }
+            }else{
+                throw { statusCode: 404, message: "ไม่พบข้อมูล" }
+            }
+        } catch (error) {
+            throw{statusCode:400 || error.statusCode, message:error.message}
+        }
     }
 }

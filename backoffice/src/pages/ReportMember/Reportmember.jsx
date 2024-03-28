@@ -27,7 +27,6 @@ export default function Reportmember() {
                 รายงานคนทีใช้บริการ
             </div>
             <div className="card-body">
-                {console.log(member.length)}
                 <div className='table-response-sm'>
                     <table className='table table-bordered table-striped'>
                         <thead>

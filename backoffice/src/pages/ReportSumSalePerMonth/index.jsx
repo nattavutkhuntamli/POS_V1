@@ -65,6 +65,7 @@ export default function index() {
                 year: selectedYear
             }
             const res = await axios.post(`${config.api_path}changepackage/reportSumSalePerMonth`, payload, config.headers());
+
             if (res.status === 200) {
                 setResults(res.data.results);
             }

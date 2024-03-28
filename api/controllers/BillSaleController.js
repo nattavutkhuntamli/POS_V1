@@ -330,7 +330,7 @@ module.exports = {
   },
   UpdateQty: async (item) => {
     try {
-      console.log(item.id);
+      // console.log(item.id);
       const isBillSaleId = await BillSaleDetailModels.findOne({
         where: {
           id: item.id,

@@ -27,7 +27,7 @@ module.exports = {
     },
     register: async (userId,item) => {
         try {
-            console.log(item)
+            // console.log(item)
             const isValidateUsername = await UserModels.findAll({
                 where:{
                     user:item.username

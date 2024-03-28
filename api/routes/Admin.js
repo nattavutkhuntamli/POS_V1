@@ -41,4 +41,36 @@ router.post('/signin', async(req, res) => {
         })
     }
 })
+
+router.post('/save', Service.isLogin, async(req, res) => {
+    try { 
+        const payload = {
+            name:req.body.name,
+            usr:req.body.usr,
+            pwd:req.body.pwd,
+            email:req.body.email,
+            level:req.body.level
+        };
+        const results = await AdminController.save(payload)
+        return res.status(200).json(results)
+    } catch (error) {
+        return res.status(error.statusCode || 500 ).json({
+            message: error.message ||'server error'
+        })
+    }
+})
+
+router.delete('/destroy/:id', Service.isLogin, async(req, res) => {
+    try {
+        const payload = {
+            id:req.params.id
+        }
+        const results = await AdminController.destroyAdmin(payload)
+        return res.status(200).json(results)
+    } catch (error) {
+        return res.status(error.statusCode || 500 ).json({
+            message: error.message ||'server error'
+        })
+    }
+})
 module.exports = router;
