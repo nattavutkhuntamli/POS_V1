@@ -88,7 +88,7 @@ export default function Template(props) {
                       <Link to="/ReportSumSalePerDay" className={location.pathname==='/ReportSumSalePerDay' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานรายได้รายวัน
                       </Link>
-                      <Link to="/report2" className={location.pathname==='/report2' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
+                      <Link to="/ReportSumSalePerMonth" className={location.pathname==='/ReportSumSalePerMonth' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>
                          <i className='fa fa-file-alt text-white me-2'></i>รายงานรายได้รายเดือน
                       </Link>
                       <Link to="/report3" className={location.pathname==='/report3' ? 'btn    btn-outline-info text-white rounded  my-menu w-100 border-0 text-start active' :'btn  btn-lg  btn-outline-info text-white rounded  my-menu w-100 border-0 text-start'}>

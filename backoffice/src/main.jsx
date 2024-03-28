@@ -7,6 +7,8 @@ import dashboard  from './pages/dashboard/dashboard.jsx'
 import Reportmember from './pages/ReportMember/Reportmember.jsx';
 import ReportChangePackage from './pages/ReportChangePackage/ReportChangePackage.jsx';
 import ReportSumSalePerDay from './pages/ReportSumSalePerDay/index.jsx';
+import ReportSumSalePerMonth from './pages/ReportSumSalePerMonth/index.jsx';
+
 const ProtectedRoute = ({ element:Element, ...rest}) => {
   const isLoginBackend = localStorage.getItem('isLoginBackend')
   if (isLoginBackend === null) {
@@ -37,6 +39,10 @@ const router = createBrowserRouter([
   {
     path:'/ReportSumSalePerDay',
     element: <ProtectedRoute element={ReportSumSalePerDay} />
+  },
+  {
+    path:'/ReportSumSalePerMonth',
+    element: <ProtectedRoute element={ReportSumSalePerMonth} />
   }
 ]);
 

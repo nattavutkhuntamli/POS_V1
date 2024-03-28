@@ -141,5 +141,55 @@ module.exports = {
         } catch (error) {
             throw { statusCode: 400, message: error.message };
         }
+    },
+
+    ReportSumSalePerMonth: async(payload) => {
+        try {
+            let arr = [];
+            let y = payload.year;
+            const Op = Sequelize.Op;
+            
+            ChangePackage.belongsTo(Package);
+            ChangePackage.belongsTo(MemberModels,{
+                foreignKey:{
+                    name:"userId"
+                }
+            });
+            for(let i = 1; i <= 12; i++) {
+                const results = await ChangePackage.findAll({
+                    where:{
+                        status:"success",
+                        [Op.and]: [
+                            Sequelize.fn('EXTRACT(YEAR FROM "changepackage"."createdAt") = ', y),
+                            Sequelize.fn('EXTRACT(MONTH FROM "changepackage"."createdAt") = ', i),
+                        ]
+                    },
+                    include:[
+                        {
+                            model:Package,
+                            attributes:['name','price']
+                        },
+                        {
+                            model:MemberModels,
+                            attributes:['name','phone']
+                        }
+                    ]
+                })
+
+                let sum = 0;
+                for(let j=0; j < results.length; j++){
+                    const item = results[j];
+                    sum+= parseInt(item.package.price)
+                }
+                arr.push({ month:i,results:results,sum:sum})
+            }
+            return {
+                statusCode: 200,
+                message:'success',
+                results: arr
+            }
+        } catch (error) {
+            throw { statusCode: 400, message: error.message };
+        }
     }
 }

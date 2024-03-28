@@ -7,6 +7,8 @@ import config from '../../config';
 import Modal from '../../components/Modal'
 
 export default function index() {
+
+    
     const [year, setYear] = useState(() => {
         let arr = [];
         let d = new Date()
@@ -21,7 +23,6 @@ export default function index() {
     const [selectedYear, setSelectedYear] = useState(() => {
         return new Date().getFullYear()
     })
-
     const [moths, setMonths] = useState(() => {
         return [
             "มกราคม",
@@ -38,21 +39,32 @@ export default function index() {
             "ธันวาคม",
         ]
     });
-
-    const [selectedMonth, setSelectedMonth] = useState(() => {
-        return new Date().getMonth() + 1;
-    })
-
     const [results, setResults] = useState([]);
+
     const [selectedDay, setSelectedDay] = useState({});
+    useEffect(() => {
+        fetchData()
+    },[])
+    const fetchData = async () => {
+        try {
+            const payload = {
+                year: selectedYear
+            }
+            const res = await axios.post(`${config.api_path}changepackage/reportSumSalePerMonth`, payload, config.headers());
+            if (res.status === 200) {
+                setResults(res.data.results);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const handlerShowReport = async (e) => {
         e.preventDefault();
         try {
             const payload = {
-                month: selectedMonth,
                 year: selectedYear
             }
-            const res = await axios.post(`${config.api_path}changepackage/reportSumSalePerDay`, payload, config.headers());
+            const res = await axios.post(`${config.api_path}changepackage/reportSumSalePerMonth`, payload, config.headers());
             if (res.status === 200) {
                 setResults(res.data.results);
             }
@@ -70,29 +82,17 @@ export default function index() {
             <Template>
                 <div className="card">
                     <div className="card-header">
-                        <div className="card-title">รายงานยอดขายรายวัน</div>
+                        <div className="card-title">รายงานยอดขายรายเดือน</div>
                     </div>
                     <div className="card-body">
                         <div className="row">
-                            <div className="col-2">
+                            <div className="col-4">
                                 <div className="input-group">
                                     <span className="input-group-text">ปี</span>
                                     <select value={selectedYear} className="form-control" onChange={e => setSelectedYear(e.target.value)}>
                                         {year.map((item, index) => (
                                             <React.Fragment key={index}>
                                                 <option value={item}>{item}</option>
-                                            </React.Fragment>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="col-2">
-                                <div className="input-group">
-                                    <span className="input-group-text">เดือน</span>
-                                    <select value={selectedMonth} className="form-control" onChange={e => setSelectedMonth(e.target.value)}>
-                                        {moths.map((item, index) => (
-                                            <React.Fragment key={index}>
-                                                <option value={index + 1}>{item}</option>
                                             </React.Fragment>
                                         ))}
                                     </select>
@@ -110,8 +110,8 @@ export default function index() {
                                 <table className='table table-bordered table-striped'>
                                     <thead>
                                         <tr>
-                                            <th width="30px" className='text-center'>วันที่</th>
-                                            <th width="100px" className='text-end'>ยอดรวมรายได้</th>
+                                            <th width="30px" className='text-center'>เดือน</th>
+                                            <th width="100px" className='text-center'>ยอดขาย</th>
                                             <th width={100} className='text-center'>รายละเอียด</th>
                                         </tr>
                                     </thead>
@@ -121,10 +121,10 @@ export default function index() {
                                                 {results.map((item, index) => (
                                                     <React.Fragment key={index}>
                                                         <tr>
-                                                            <td className='text-center'>{item.day}</td>
+                                                            <td className='text-center'>{moths[item.month -1]}</td>
                                                             <td className='text-end'>{parseInt(item.sum).toLocaleString('th-TH')}</td>
                                                             <td className='text-center'>
-                                                                <button className='btn btn-success btn-lg rounded-2 '
+                                                                <button className='btn btn-primary btn-lg rounded-2 '
                                                                     data-target="#modalInfo" data-toggle="modal"
                                                                     onClick={(e) => setSelectedDay(item)}
                                                                 >
@@ -158,6 +158,7 @@ export default function index() {
                                     <th className='text-center'>วันที่สมัคร</th>
                                     <th className='text-end'>วันที่ชำระเงิน</th>
                                     <th className='text-center'>ผู้สมัคร</th>
+                                    <th className='text-center'> เบอร์โทรศัพท์ฺ</th>
                                     <th className='text-center'>แพกเกจ</th>
                                     <th className='text-center'>ค่าบริการ</th>
                                 </tr>
@@ -169,8 +170,9 @@ export default function index() {
                                              <td className='text-center'>{new Date(item.createdAt).toLocaleDateString('th-TH')}</td>
                                              <td className='text-center'>{new Date(item.payDate).toLocaleDateString('th-TH')} {item.payHour}.{item.payMinute}</td>
                                              <td className='text-center'> {item.member.name}</td>
+                                             <td className='text-center'> {item.member.phone}</td>
                                              <td className='text-center'>{item.package.name}</td>
-                                             <td className='text-end'>{parseInt(item.package.price).toLocaleString('th-TH')}</td>
+                                             <td className='text-center'>{parseInt(item.package.price).toLocaleString('th-TH')}</td>
                                          </tr>
                                      </React.Fragment>
                                  )): <tr><td colSpan={4} className='text-center'> <i className=' fa fa-alert-alt me-2'></i> ไม่มีข้อมูล</td></tr>}
