@@ -17,7 +17,7 @@ router.get('/info', Service.isLogin, async(req, res) => {
         const payload = {
             id:req.member
         }
-        console.log(payload)
+        // console.log(payload)
         const response =await AdminController.info(payload)
         return res.status(200).json(response)
     }catch(error){
@@ -32,7 +32,7 @@ router.post('/signin', async(req, res) => {
             username:req.body.username,
             password:req.body.password
         }
-        console.log(payload)
+        // console.log(payload)
         const response = await AdminController.authenLogin(payload);
         return res.status(200).json(response)
     } catch (error) {

@@ -43,7 +43,6 @@ module.exports = {
     },
     isLoginAdmin: async(req,res,next) => {
         try {
-            console.log(req.headers.authorization)
 
             next()
             // const token = req.headers.authorization.replace('Bearer','').trim();

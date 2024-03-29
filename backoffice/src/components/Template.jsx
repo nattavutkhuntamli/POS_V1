@@ -54,6 +54,7 @@ export default function Template(props) {
             console.log(error)
         }
     }
+    console.log(admin)
     return (
         <>
             <div className='d-flex'>
