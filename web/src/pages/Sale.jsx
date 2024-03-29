@@ -1,10 +1,11 @@
-import React, { useEffect, useState , useRef} from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Template from '../components/Template'
 import Header from '../components/Header'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import config from '../config'
 import Modal from '../components/Modal'
+import PrintJs from 'print-js'
 export default function Sale() {
     const [products, setProducts] = useState([])
     const [billSale, setBillSale] = useState({})
@@ -15,14 +16,25 @@ export default function Sale() {
     const [LastBill, setLastBill] = useState({})
     const [TodayBill, setTodayBill] = useState([])
     const [SelectedBill, setSelectedBill] = useState({})
-    
+    const [memberInfo, setMemberInfo] = useState({});
+
     const saleRef = useRef() //อ้างอิงหา method
     useEffect(() => {
         fetchData()
         openBill()
         fetchBillSaleDetail()
+        if (memberInfo.name !== undefined && LastBill!= {} && LastBill.billSaleDetails != undefined) {
+            let slip = document.getElementById('slip')
+            slip.style.display = 'block'
+            PrintJs({
+                printable: 'slip',
+                type: 'html',
+                maxWidth: 250,
+            })
+            slip.style.display = 'none'
 
-    }, [])
+        }
+    }, [memberInfo,LastBill])
 
     const fetchData = async () => {
         try {
@@ -206,7 +218,7 @@ export default function Sale() {
                                 openBill()
                                 fetchBillSaleDetail()
                                 handleClose()
-                                if(saleRef.current){
+                                if (saleRef.current) {
                                     saleRef.current.refreshCountBill();
                                 }
                                 setInputMoney(0)
@@ -261,50 +273,66 @@ export default function Sale() {
             setTodayBill([])
         }
     }
+    const handelPrint = async () => {
+        try {
+            const res = await axios.get(`${config.api_path}member/info`, config.headers())
+            if (res.status === 200) {
+                setMemberInfo(res.data.body)
+
+            }
+            handleLastBill()
+
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
     return (
         <div>
             <Template ref={saleRef}>
                 <Header title="รายการสินค้า" breadMain="หน้าแรก" breadActive="สินค้า" />
-                <div className="card"  style={{ maxHeight: "80vh", overflowY: "auto"  }}>
+                <div className="card" style={{ maxHeight: "80vh", overflowY: "auto" }}>
                     <div className="card-header bg-white">
                         <h3 className="card-title"> ขายสินค้า </h3>
                         <div className="card-tools">
                             <button className='btn btn-success me-2' data-toggle="modal" data-target="#modalEndSale"> <i className=' fa fa-check  me-2'></i>จบการขาย</button>
                             <button className='btn btn-info me-2' onClick={handleTodayBill} data-toggle="modal" data-target="#modaltodayBill"> <i className=' fa fa-file  me-2'></i>บิลวันนี้</button>
                             <button className='btn btn-secondary me-2' onClick={handleLastBill} data-toggle="modal" data-target="#modalLastBill"> <i className=' fa fa-file-alt  me-2'></i>บิลล่าสุด</button>
+                            <button className='btn btn-primary' onClick={handelPrint}><i className='fa fa-print me-2'></i> พิมพ์บิลล่าสุด</button>
                         </div>
                     </div>
                     <div className="card-body" >
                         <div className="row">
                             <div className="col-sm-9">
                                 <div className="row">
-                                  <div className="card border-0  shadow-none " style={{ boxShadow :"0"}}>
-                                    <div className="card-body" style={{ maxHeight: "80vh", overflowY: "auto" }}>
-                                        <div className="row">
-                                            {products.length > 0 ? products.map(item => (
-                                                <div className="col-lg-3 col-md-6" key={item.id} onClick={e => handleSave(item)} style={{ cursor: "pointer" }}>
-                                                    <div className="card d-flex flex-column align-items-center text-nowrap" >
-                                                        <div className="text-center">
-                                                            <img className="card-img mt-2" src={`${config.host + item.productImages[0].imageName}`} alt={item.name} width={'200px'} height={'200px'} />
-                                                        </div>
-                                                        <div className="card-body pt-4">
-                                                            <div className="text-muted text-center mt-auto">{item.name}</div>
+                                    <div className="card border-0  shadow-none " style={{ boxShadow: "0" }}>
+                                        <div className="card-body" style={{ maxHeight: "80vh", overflowY: "auto" }}>
+                                            <div className="row">
+                                                {products.length > 0 ? products.map(item => (
+                                                    <div className="col-lg-3 col-md-6" key={item.id} onClick={e => handleSave(item)} style={{ cursor: "pointer" }}>
+                                                        <div className="card d-flex flex-column align-items-center text-nowrap" >
                                                             <div className="text-center">
-                                                                <div className="font-weight-bold"><span className="text-dark">{parseInt(item.price).toLocaleString('th')} บาท</span></div>
+                                                                <img className="card-img mt-2" src={`${config.host + item.productImages[0].imageName}`} alt={item.name} width={'200px'} height={'200px'} />
+                                                            </div>
+                                                            <div className="card-body pt-4">
+                                                                <div className="text-muted text-center mt-auto">{item.name}</div>
+                                                                <div className="text-center">
+                                                                    <div className="font-weight-bold"><span className="text-dark">{parseInt(item.price).toLocaleString('th')} บาท</span></div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            )) : ""}
-                                        </div>
+                                                )) : ""}
+                                            </div>
 
+                                        </div>
                                     </div>
-                                  </div>
                                 </div>
                             </div>
                             <div className="col-12 col-sm-3">
                                 <div className="card">
-                                    <div className="card-body"  style={{ border: "2px dotted", maxHeight: "100%", overflowY: "auto" }}>
+                                    <div className="card-body" style={{ border: "2px dotted", maxHeight: "100%", overflowY: "auto" }}>
                                         <div className="text-end">
                                             <span className='btn btn-secondary h2 pe-3 ps-3 w-100 p-3 text-right' style={{ borderRadius: "0", color: "#70FE3F", backgroundColor: "black" }}>  {parseInt(totalPrice).toLocaleString('th') || 0.00}</span>
                                         </div>
@@ -340,7 +368,7 @@ export default function Sale() {
                                             <div className="card mt-3">
                                                 <div className="card-body">
                                                     <div className="text-center">
-                                                        <img src="https://go.pospos.co/assets/images/ic-avatar-ready-to-sale.svg" className='img-top'/>
+                                                        <img src="https://go.pospos.co/assets/images/ic-avatar-ready-to-sale.svg" className='img-top' />
                                                     </div>
                                                 </div>
                                             </div>
@@ -398,30 +426,30 @@ export default function Sale() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {LastBill.billSaleDetails !== undefined && LastBill.billSaleDetails .length > 0 ? (
-                                        <>
-                                            {LastBill.billSaleDetails.map((item, index) => (
-                                                <React.Fragment key={index}>
-                                                    <tr>
-                                                        <td className='text-center'>{index + 1}</td>
-                                                        <td>{item.product.barcode}</td>
-                                                        <td >{item.product.name}</td>
-                                                        <td className='text-end'>{parseInt(item.price).toLocaleString('th')}</td>
-                                                        <td className='text-end'> {item.qty}</td>
-                                                        <td className='text-end'>{parseInt(item.price * item.qty).toLocaleString('th')}</td>
-                                                    </tr>
-                                                </React.Fragment>
-                                            ))}
-                                            <tr>
-                                                <td colSpan={5} className='text-end'>ยอดขายรวม</td>
-                                                <td className='text-end'>
-                                                    {LastBill.billSaleDetails.reduce((total, billItem) => total + billItem.price * billItem.qty, 0).toLocaleString('th')}
-                                                </td>
-                                            </tr>
-                                        </>
-                                    ) : (
-                                        <tr><td colSpan={6}>ไม่มีข้อมูล</td></tr>
-                                    )}
+                                {LastBill.billSaleDetails !== undefined && LastBill.billSaleDetails.length > 0 ? (
+                                    <>
+                                        {LastBill.billSaleDetails.map((item, index) => (
+                                            <React.Fragment key={index}>
+                                                <tr>
+                                                    <td className='text-center'>{index + 1}</td>
+                                                    <td>{item.product.barcode}</td>
+                                                    <td >{item.product.name}</td>
+                                                    <td className='text-end'>{parseInt(item.price).toLocaleString('th')}</td>
+                                                    <td className='text-end'> {item.qty}</td>
+                                                    <td className='text-end'>{parseInt(item.price * item.qty).toLocaleString('th')}</td>
+                                                </tr>
+                                            </React.Fragment>
+                                        ))}
+                                        <tr>
+                                            <td colSpan={5} className='text-end'>ยอดขายรวม</td>
+                                            <td className='text-end'>
+                                                {LastBill.billSaleDetails.reduce((total, billItem) => total + billItem.price * billItem.qty, 0).toLocaleString('th')}
+                                            </td>
+                                        </tr>
+                                    </>
+                                ) : (
+                                    <tr><td colSpan={6}>ไม่มีข้อมูล</td></tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
@@ -506,7 +534,47 @@ export default function Sale() {
                         </table>
                     </div>
                 </Modal>
+                <div id='slip' >
+                  {Object.keys(memberInfo).length != 0 ? (
+                    <>
+                    <div ><center>เลขบิล:{LastBill.id}</center></div>
+                    <div><center>ใบเสร็จรับเงิน</center></div>
+                    <div>
+                        <center><strong>{memberInfo.name}</strong></center>
+                    </div>
+                    <hr />
+                    <table width="100%">
+                        <tbody>
+                            {LastBill.billSaleDetails !== undefined && LastBill.billSaleDetails.length > 0 ? (
+                                <>
+                                    {LastBill.billSaleDetails.map((item, index) => (
+                                        <React.Fragment key={index}>
+                                            <tr>
+                                                <td >({index + 1})</td>
+                                                <td >{item.product.name}</td>
+                                                <td align='right'> {item.qty}</td>
+                                                <td align='right'> {parseInt(item.price).toLocaleString('th')}</td>
+                                                <td align='right'> {parseInt(item.price * item.qty).toLocaleString('th')}</td>
+                                            </tr>
+                                        </React.Fragment>
+                                    ))}
+                                </>
+                            ) : (
+                                <tr><td colSpan={6}>ไม่มีข้อมูล</td></tr>
+                            )}
+                        </tbody>
+                    </table>
+                    <hr />
+                    <div>ยอดรวม: {
+                    LastBill.billSaleDetails !== undefined && LastBill.billSaleDetails.length > 0 ?
+                    LastBill.billSaleDetails.reduce((total, billItem) => total + billItem.price * billItem.qty, 0).toLocaleString('th') : null} บาท</div>
+                    <div>เวลา {new Date(LastBill.createdAt).toLocaleString('th-TH')}</div>
+                    </>
+                   ) :null}
+
+                </div>
             </Template>
+            
         </div>
     )
 }

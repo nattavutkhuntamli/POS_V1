@@ -280,8 +280,13 @@ const  SideBar = forwardRef((props,sidebarRef) => {
         }
     }
     const calculatePercentage = (totalBill,billAmount) => {
-        const percentage = ((totalBill * 100) / billAmount) 
-        return percentage
+        if(billAmount > 0) {
+            const percentage = ((totalBill * 100) / billAmount) 
+            return percentage;
+        }else{
+            return 0;
+        }
+        
     }
  
     useImperativeHandle(sidebarRef,() => ({

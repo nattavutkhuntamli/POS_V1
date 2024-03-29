@@ -128,15 +128,17 @@ export default function Template(props) {
                         <div className='ms-2'>
                             <button
                                 className='btn btn-outline-warning btn-sm me-2'
-                                onClick={handleLogout}>
-                                ออกจากระบบ
-                            </button>
-                            <button
-                                className='btn btn-outline-warning btn-sm me-2'
                                 data-target="#modaleditPass" data-toggle="modal"
                             >
                                 เปลี่ยนรหัสผ่าน
                             </button>
+
+                            <button
+                                className='btn btn-outline-warning btn-sm me-2'
+                                onClick={handleLogout}>
+                                ออกจากระบบ
+                            </button>
+                           
                         </div>
                         <hr className='mt-4' />
                     </div>

@@ -1,6 +1,6 @@
 function Modal(props) {
     let modalSize = 'modal-dialog';
-    let icon = ''
+    let icon = 'fa fa-file-alt'
     if (props.modalSize) {
         modalSize += ' ' + props.modalSize;
     }
