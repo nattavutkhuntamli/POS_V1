@@ -83,6 +83,7 @@ router.put('/editpass/:id', Service.isLogin, async(req, res,) => {
             id:req.params.id,
             pwd:req.body.pwd
         }
+
         const results = await AdminController.editpass(payload)
         return res.status(200).json(results)
     } catch (error) {
